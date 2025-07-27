@@ -1,37 +1,13 @@
 import { useState } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
-import type { Post, NewPost } from '@/types/post';
 import { Button } from '@/components/ui/button';
-
-const createPost = async (newPost: NewPost): Promise<Post> => {
-  const { data } = await axios.post<Post>('https://jsonplaceholder.typicode.com/posts', newPost);
-  return data;
-};
+import { useUserMutation } from '../hooks/useUser'
 
 export default function CreatePostWithMutation() {
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const [userId, setUserId] = useState(1);
   
-  const queryClient = useQueryClient();
-
-  const mutation = useMutation({
-    mutationFn: createPost,
-    onSuccess: (data) => {
-      // Optionally invalidate and refetch posts query if you have one
-      queryClient.invalidateQueries({ queryKey: ['posts'] });
-      console.log('Post created successfully:', data);
-      
-      // Reset form
-      setTitle('');
-      setBody('');
-      setUserId(1);
-    },
-    onError: (error) => {
-      console.error('Error creating post:', error);
-    },
-  });
+  const mutation = useUserMutation({setTitle, setBody, setUserId})
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
