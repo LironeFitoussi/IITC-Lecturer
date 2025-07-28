@@ -36,7 +36,7 @@ const AuthController = {
       console.log(`User created: ${user.email}`);
 
       // Generate token
-      const token = generateAccessToken({ userId: String(user._id), email: user.email });
+      const token = generateAccessToken({ userId: user._id, email: user.email });
 
       // Set HTTP-only cookie
       res.cookie('accessToken', token, {

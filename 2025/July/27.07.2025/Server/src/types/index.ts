@@ -1,4 +1,4 @@
-import { ObjectId } from "mongoose";
+import mongoose from 'mongoose';
 
 export interface User {
   id: string;
@@ -30,7 +30,7 @@ export interface RegisterRequest {
 }
 
 export interface AuthPayload {
-  userId: string;
+  userId: mongoose.Types.ObjectId;
   email: string;
 }
 
