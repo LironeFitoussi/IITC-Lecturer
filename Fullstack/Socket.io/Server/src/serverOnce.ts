@@ -28,6 +28,7 @@ io.on('connection', (socket: any) => {
   
   socket.emit('log', socket.id);
   
+  // שליחה לכולם חוץ מהשולח - broadcast example
   socket.broadcast.emit('userJoined', socket.id);
   
   console.log(`Current connected users: ${connectedUsers.size}`);
@@ -35,9 +36,38 @@ io.on('connection', (socket: any) => {
 
   socket.emit('welcome', `Welcome to the Once Chat Server! Your ID is ${socket.id}`);
 
-  socket.on('message', (message: string, userId: string) => {
+  // Example of event listener with handler function
+  const messageHandler = (message: string, userId: string) => {
     console.log(`Message from ${userId}: ${message}`);
     io.emit('message', message, userId);
+  };
+
+  // Add event listener
+  socket.on('message', messageHandler);
+
+  // Example of removing event listener
+  socket.on('removeMessageHandler', () => {
+    console.log(`Removing message handler for user ${socket.id}`);
+    socket.off('message', messageHandler);
+    socket.emit('handlerRemoved', 'Message handler removed successfully');
+  });
+
+  // Example of conditional event handling
+  socket.on('conditionalMessage', (message: string, userId: string, shouldBroadcast: boolean) => {
+    console.log(`Conditional message from ${userId}: ${message}`);
+    if (shouldBroadcast) {
+      io.emit('message', message, userId);
+    } else {
+      socket.emit('message', message, userId);
+    }
+  });
+
+  // Example of event with timeout
+  socket.on('timedMessage', (message: string, userId: string) => {
+    console.log(`Timed message from ${userId}: ${message}`);
+    setTimeout(() => {
+      io.emit('message', `[DELAYED] ${message}`, userId);
+    }, 2000);
   });
 
   socket.on('setUsername', (username: string) => {
@@ -49,6 +79,8 @@ io.on('connection', (socket: any) => {
     }
   });
 
+
+
   socket.on('privateMessage', (targetUserId: string, message: string) => {
     const targetSocket = io.sockets.sockets.get(targetUserId);
     if (targetSocket) {
@@ -57,6 +89,23 @@ io.on('connection', (socket: any) => {
     } else {
       socket.emit('error', 'User not found');
     }
+  });
+
+  // Example of error handling
+  socket.on('error', (error: any) => {
+    console.error(`Socket error for ${socket.id}:`, error);
+    socket.emit('error', 'An error occurred on the server');
+  });
+
+  // Example of connection state
+  socket.on('getConnectionState', () => {
+    const state = {
+      id: socket.id,
+      connected: socket.connected,
+      rooms: Array.from(socket.rooms),
+      timestamp: new Date().toISOString()
+    };
+    socket.emit('connectionState', state);
   });
 
   socket.on('disconnect', () => {

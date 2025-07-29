@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { io } from 'socket.io-client';
+import React, { useState, useEffect, useRef } from 'react';
+import { io, Socket } from 'socket.io-client';
 import AppWithIds from './SocketWithIds';
 import AppWithOnce from './SocketWithOnce';
+import AppWithRooms from './SocketWithRooms';
 
 // Define the different chat modes
-type ChatMode = 'none' | 'simple' | 'enhanced' | 'once';
+type ChatMode = 'none' | 'simple' | 'enhanced' | 'once' | 'rooms';
 
 const App: React.FC = () => {
-  const [socket, setSocket] = useState<any>(null);
+  const socketRef = useRef<Socket | null>(null);
   const [messages, setMessages] = useState<string[]>([]);
   const [messageInput, setMessageInput] = useState('');
   const [chatMode, setChatMode] = useState<ChatMode>('none');
@@ -15,7 +16,7 @@ const App: React.FC = () => {
   useEffect(() => {
     if (chatMode === 'simple') {
       const newSocket = io('http://localhost:3001');
-      setSocket(newSocket);
+      socketRef.current = newSocket;
 
       newSocket.on('message', (message: string) => {
         setMessages(prev => [...prev, `${message}`]);
@@ -28,8 +29,8 @@ const App: React.FC = () => {
   }, [chatMode]);
 
   const handleSendMessage = () => {
-    if (messageInput.trim() && socket) {
-      socket.emit('message', messageInput, socket.id);
+    if (messageInput.trim() && socketRef.current) {
+      socketRef.current.emit('message', messageInput, socketRef.current.id);
       setMessageInput('');
     }
   };
@@ -41,9 +42,9 @@ const App: React.FC = () => {
   };
 
   const switchToEnhanced = () => {
-    if (socket) {
-      socket.close();
-      setSocket(null);
+    if (socketRef.current) {
+      socketRef.current.close();
+      socketRef.current = null;
     }
     setChatMode('enhanced');
   };
@@ -53,24 +54,36 @@ const App: React.FC = () => {
   };
 
   const switchToNone = () => {
-    if (socket) {
-      socket.close();
-      setSocket(null);
+    if (socketRef.current) {
+      socketRef.current.close();
+      socketRef.current = null;
     }
     setChatMode('none');
   };
 
   const switchToOnce = () => {
-    if (socket) {
-      socket.close();
-      setSocket(null);
+    if (socketRef.current) {
+      socketRef.current.close();
+      socketRef.current = null;
     }
     setChatMode('once');
+  };
+
+  const switchToRooms = () => {
+    if (socketRef.current) {
+      socketRef.current.close();
+      socketRef.current = null;
+    }
+    setChatMode('rooms');
   };
 
 
   if (chatMode === 'once') {
     return <AppWithOnce onBackToSimple={switchToNone} />;
+  }
+
+  if (chatMode === 'rooms') {
+    return <AppWithRooms onBackToSimple={switchToNone} />;
   }
 
   if (chatMode === 'enhanced') {
@@ -139,7 +152,7 @@ const App: React.FC = () => {
           <h1 className="text-4xl font-bold mb-8">Socket.io Chat Examples</h1>
           <p className="text-lg text-gray-600 mb-8">Choose a chat mode to get started</p>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="bg-white rounded-lg p-6 shadow-lg">
               <h2 className="text-2xl font-semibold mb-4">Simple Chat</h2>
               <p className="text-gray-600 mb-4">Basic Socket.io chat with public messaging</p>
@@ -170,6 +183,17 @@ const App: React.FC = () => {
                 className="w-full px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
               >
                 Start Once Chat
+              </button>
+            </div>
+            
+            <div className="bg-white rounded-lg p-6 shadow-lg">
+              <h2 className="text-2xl font-semibold mb-4">Rooms Chat</h2>
+              <p className="text-gray-600 mb-4">Advanced chat with room management and multiple channels</p>
+              <button
+                onClick={switchToRooms}
+                className="w-full px-6 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors"
+              >
+                Start Rooms Chat
               </button>
             </div>
           </div>

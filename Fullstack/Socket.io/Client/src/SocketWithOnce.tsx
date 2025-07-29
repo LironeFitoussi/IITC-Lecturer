@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
 
 interface Message {
@@ -19,7 +19,7 @@ interface AppWithOnceProps {
 }
 
 const AppWithOnce: React.FC<AppWithOnceProps> = ({ onBackToSimple }) => {
-  const [socket, setSocket] = useState<Socket | null>(null);
+  const socketRef = useRef<Socket | null>(null);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [messageInput, setMessageInput] = useState('');
@@ -30,9 +30,11 @@ const AppWithOnce: React.FC<AppWithOnceProps> = ({ onBackToSimple }) => {
   const [selectedUser, setSelectedUser] = useState<string>('');
   const [privateMessages, setPrivateMessages] = useState<Message[]>([]);
 
+  const [connectionState, setConnectionState] = useState<any>(null);
+
   useEffect(() => {
     const newSocket = io('http://localhost:3001');
-    setSocket(newSocket);
+    socketRef.current = newSocket;
 
     newSocket.on('log', (userId: string) => {
       console.log('Received my user ID:', userId);
@@ -102,23 +104,23 @@ const AppWithOnce: React.FC<AppWithOnceProps> = ({ onBackToSimple }) => {
   }, []);
 
   const handleSendMessage = () => {
-    if (messageInput.trim() && socket && currentUser) {
-      socket.emit('message', messageInput, currentUser.id);
+    if (messageInput.trim() && socketRef.current && currentUser) {
+      socketRef.current.emit('message', messageInput, currentUser.id);
       setMessageInput('');
     }
   };
 
   const handleSetUsername = () => {
-    if (username.trim() && socket) {
-      socket.emit('setUsername', username);
+    if (username.trim() && socketRef.current) {
+      socketRef.current.emit('setUsername', username);
       setCurrentUser(prev => prev ? { ...prev, username } : null);
       setUsername('');
     }
   };
 
   const handleSendPrivateMessage = () => {
-    if (privateMessageInput.trim() && selectedUser && socket) {
-      socket.emit('privateMessage', selectedUser, privateMessageInput);
+    if (privateMessageInput.trim() && selectedUser && socketRef.current) {
+      socketRef.current.emit('privateMessage', selectedUser, privateMessageInput);
       setPrivateMessageInput('');
     }
   };
@@ -147,8 +149,8 @@ const AppWithOnce: React.FC<AppWithOnceProps> = ({ onBackToSimple }) => {
           <h1 className="text-3xl font-bold">Once Chat with User IDs</h1>
           <button
             onClick={() => {
-              if (socket) {
-                socket.close();
+              if (socketRef.current) {
+                socketRef.current.close();
               }
               onBackToSimple();
             }}
