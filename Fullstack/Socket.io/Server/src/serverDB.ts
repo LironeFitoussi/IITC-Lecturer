@@ -144,6 +144,16 @@ app.get('/api/rooms', authenticateToken, async (req, res) => {
   }
 });
 
+// Get user's rooms (protected)
+app.get('/api/user/rooms', authenticateToken, async (req: any, res) => {
+  try {
+    const rooms = await Room.find({ users: req.user.userId }).populate('createdBy', 'username');
+    res.json(rooms);
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 // Get room messages (protected)
 app.get('/api/rooms/:roomId/messages', authenticateToken, async (req, res) => {
   try {
@@ -152,6 +162,19 @@ app.get('/api/rooms/:roomId/messages', authenticateToken, async (req, res) => {
       .sort({ createdAt: 1 })
       .limit(100);
     res.json(messages);
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// Validate token (protected)
+app.get('/api/validate', authenticateToken, async (req: any, res) => {
+  try {
+    const user = await User.findById(req.user.userId).select('-password');
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    res.json(user);
   } catch (error) {
     res.status(500).json({ error: 'Server error' });
   }

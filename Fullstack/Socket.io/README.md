@@ -4,25 +4,32 @@ A comprehensive Socket.io chat application demonstrating different levels of com
 
 ## Features
 
-- **Multiple Chat Modes**: Basic, Enhanced, and Once
+- **Multiple Chat Modes**: Basic, Enhanced, Once, Rooms, and DB
 - **Real-time messaging** across all modes
 - **User ID tracking** in enhanced modes
 - **Private messaging** capabilities
 - **Username management**
 - **Once event handling** demonstration
+- **Room management** in Rooms and DB modes
+- **JWT authentication** in DB mode
+- **Database persistence** in DB mode
 
 ## Project Structure
 
 ```
 Socket.io/
 ├── Client/
-│   ├── src/App.tsx           # Main app with mode selection
-│   ├── src/SocketWithIds.tsx # Enhanced chat component
-│   └── src/SocketWithOnce.tsx # Once chat component
+│   ├── src/App.tsx              # Main app with mode selection
+│   ├── src/SocketWithIds.tsx    # Enhanced chat component
+│   ├── src/SocketWithOnce.tsx   # Once chat component
+│   ├── src/SocketWithRooms.tsx  # Rooms chat component
+│   └── src/SocketWithDB.tsx     # DB chat component
 └── Server/
-    ├── src/serverBasic.ts    # Basic server (Port 3001)
-    ├── src/serverWithIds.ts  # Enhanced server (Port 3002)
-    └── src/serverOnce.ts     # Once server (Port 3003)
+    ├── src/serverBasic.ts       # Basic server (Port 3001)
+    ├── src/serverWithIds.ts     # Enhanced server (Port 3001)
+    ├── src/serverOnce.ts        # Once server (Port 3001)
+    ├── src/serverRooms.ts       # Rooms server (Port 3001)
+    └── src/serverDB.ts          # DB server (Port 3001)
 ```
 
 ## Quick Start
@@ -43,6 +50,16 @@ cd Server && npm run dev:enhanced
 **Once Server** (Enhanced + once events):
 ```bash
 cd Server && npm run dev:once
+```
+
+**Rooms Server** (Room management):
+```bash
+cd Server && npm run dev:rooms
+```
+
+**DB Server** (JWT auth + MongoDB):
+```bash
+cd Server && npm run dev:db
 ```
 
 ### 2. Start Client
@@ -69,6 +86,16 @@ cd Client && npm run dev
 - **Features**: Enhanced features + once event handling + welcome messages
 - **Use Case**: Demonstrating Socket.io once events
 
+### 🟧 Rooms Chat
+- **Server**: Port 3001
+- **Features**: Room management, room-specific chat, global messages
+- **Use Case**: Multi-room chat application
+
+### 🟪 DB Chat
+- **Server**: Port 3001
+- **Features**: JWT authentication, MongoDB persistence, persistent rooms and messages
+- **Use Case**: Production-ready chat application
+
 ## Server Commands
 
 | Mode | Command | Port | Features |
@@ -76,6 +103,8 @@ cd Client && npm run dev
 | Basic | `npm run dev:basic` | 3001 | Public messages only |
 | Enhanced | `npm run dev:enhanced` | 3001 | Full user management |
 | Once | `npm run dev:once` | 3001 | Enhanced + once events |
+| Rooms | `npm run dev:rooms` | 3001 | Room management |
+| DB | `npm run dev:db` | 3001 | JWT auth + MongoDB |
 
 ## How it Works
 

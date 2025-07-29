@@ -3,11 +3,13 @@ import { io, Socket } from 'socket.io-client';
 import AppWithIds from './SocketWithIds';
 import AppWithOnce from './SocketWithOnce';
 import AppWithRooms from './SocketWithRooms';
+import AppWithDB from './SocketWithDB';
+import { AuthProvider } from './contexts/AuthContext';
 
 // Define the different chat modes
-type ChatMode = 'none' | 'simple' | 'enhanced' | 'once' | 'rooms';
+type ChatMode = 'none' | 'simple' | 'enhanced' | 'once' | 'rooms' | 'db';
 
-const App: React.FC = () => {
+const AppContent: React.FC = () => {
   const socketRef = useRef<Socket | null>(null);
   const [messages, setMessages] = useState<string[]>([]);
   const [messageInput, setMessageInput] = useState('');
@@ -77,6 +79,14 @@ const App: React.FC = () => {
     setChatMode('rooms');
   };
 
+  const switchToDB = () => {
+    if (socketRef.current) {
+      socketRef.current.close();
+      socketRef.current = null;
+    }
+    setChatMode('db');
+  };
+
 
   if (chatMode === 'once') {
     return <AppWithOnce onBackToSimple={switchToNone} />;
@@ -84,6 +94,10 @@ const App: React.FC = () => {
 
   if (chatMode === 'rooms') {
     return <AppWithRooms onBackToSimple={switchToNone} />;
+  }
+
+  if (chatMode === 'db') {
+    return <AppWithDB onBackToSimple={switchToNone} />;
   }
 
   if (chatMode === 'enhanced') {
@@ -152,7 +166,7 @@ const App: React.FC = () => {
           <h1 className="text-4xl font-bold mb-8">Socket.io Chat Examples</h1>
           <p className="text-lg text-gray-600 mb-8">Choose a chat mode to get started</p>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
             <div className="bg-white rounded-lg p-6 shadow-lg">
               <h2 className="text-2xl font-semibold mb-4">Simple Chat</h2>
               <p className="text-gray-600 mb-4">Basic Socket.io chat with public messaging</p>
@@ -196,10 +210,29 @@ const App: React.FC = () => {
                 Start Rooms Chat
               </button>
             </div>
+            
+            <div className="bg-white rounded-lg p-6 shadow-lg">
+              <h2 className="text-2xl font-semibold mb-4">DB Chat</h2>
+              <p className="text-gray-600 mb-4">Full-stack chat with JWT auth, MongoDB persistence</p>
+              <button
+                onClick={switchToDB}
+                className="w-full px-6 py-3 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition-colors"
+              >
+                Start DB Chat
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
+  );
+};
+
+const App: React.FC = () => {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 };
 
