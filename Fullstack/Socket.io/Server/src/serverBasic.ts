@@ -4,7 +4,6 @@ import { Server } from 'socket.io';
 import cors from 'cors';
 
 const app = express();
-// Because we are using socket.io, we need to create a http server
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
@@ -13,26 +12,28 @@ const io = new Server(httpServer, {
   }
 });
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// Routes
 app.get('/', (req, res) => {
-  res.json({ message: 'Chat Server Running!' });
+  res.json({ message: 'Basic Chat Server Running!' });
 });
 
-// Socket.io
-// When a user connects to the server, we want to emit a message to all connected users
 io.on('connection', (socket: any) => {
+  console.log(`User ${socket.id} connected to basic server`);
+
   socket.on('message', (message: string) => {
+    console.log(`Message: ${message}`);
     io.emit('message', message);
+  });
+
+  socket.on('disconnect', () => {
+    console.log(`User ${socket.id} disconnected from basic server`);
   });
 });
 
 const PORT = 3001;
 
-// Start the server
 httpServer.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+  console.log(`Basic server running on port ${PORT}`);
+}); 
