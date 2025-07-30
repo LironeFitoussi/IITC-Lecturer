@@ -10,6 +10,7 @@ import connectDB from './config/db'
 // Routes Imports
 import authRoutes from './routes/auth';
 import authorRoutes from './routes/author';
+import bookRoutes from './routes/book';
 
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 
@@ -34,6 +35,7 @@ app.use(morgan('tiny'));
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/authors', authorRoutes)
+app.use('/api/books', bookRoutes)
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
