@@ -3,30 +3,20 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
-import mongoose from 'mongoose';
 
+// Configs
+import connectDB from './config/db'
+
+// Routes Imports
 import authRoutes from './routes/auth';
+import authorRoutes from './routes/author';
+
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
-
-const MONGODB_URI = process.env.MONGODB_URI as string
-
-if (!MONGODB_URI) {
-  throw new Error("Hey Dev, Yo ididnt provided thr mongodb uri string in the .env file")
-}
-
-const connectDB = async () => {
-  try {
-    await mongoose.connect(MONGODB_URI)
-    console.log("Succefully Connected to DB")
-  } catch (error) {
-    throw new Error("we've got an issue while connecting to the DB")
-  }
-}
 
 connectDB()
 
@@ -43,6 +33,7 @@ app.use(morgan('tiny'));
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/authors', authorRoutes)
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
