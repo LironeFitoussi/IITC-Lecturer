@@ -21,8 +21,16 @@ const authorSchema = new Schema<IAuthor>({
     require: true, 
   },
 },{
-  timestamps: true
+  timestamps: true,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
 })
+
+authorSchema.virtual('books', {
+  ref: "Book",
+  localField: "_id",
+  foreignField: "author"
+});
 
 const Author = mongoose.model<IAuthor>("Author", authorSchema)
 export default Author;

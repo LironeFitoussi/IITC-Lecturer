@@ -36,7 +36,7 @@ const AuthorController = {
     try {
       const { id } = req.params
 
-      const author = await AuthorModel.findById(id)
+      const author = await AuthorModel.findById(id).populate('books')
 
       if (!author) {
         res.status(404).json({
