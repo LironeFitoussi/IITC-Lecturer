@@ -13,6 +13,7 @@ const authorSchema = new Schema<IAuthor>({
   name: {
     type: String,
     require: true, 
+    unique: true
   },
   bio: String,
   birthYear: {

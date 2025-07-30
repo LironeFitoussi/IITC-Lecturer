@@ -1,38 +1,37 @@
-import mongoose, { Document, Schema } from 'mongoose'
+import mongoose, { Document } from "mongoose";
 
-interface IBook extends Document {
+interface IReview extends Document {
   _id: mongoose.Types.ObjectId;
-  title: string,
-  author: mongoose.Types.ObjectId;
-  publishedYear: number,
-  genres: string[],
-  addedBy: mongoose.Types.ObjectId,
+  book: mongoose.Types.ObjectId;
+  reviewer: mongoose.Types.ObjectId;
+  rating: number;
+  text: string;
   createdAt: Date;
   updatedAt: Date;
 }
 
-const bookSchema = new Schema<IBook>({
-  title: {
-    type: String,
-    require: true, 
+const reviewSchema = new mongoose.Schema<IReview>(
+  {
+    book: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Book",
+      require: true,
+    },
+    reviewer: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      require: true,
+    },
+    rating: {
+      type: Number,
+      require: true,
+    },
+    text: String,
   },
-  //? This is a reference to the Author model, so we can get the author of the book
-  author: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Author",
-    require: true,
-  },
-  publishedYear: Number,
-  //? This is an array of strings, so we can add multiple genres to a book
-  genres: [String],
-  addedBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    require: true,
-  },
-},{
-  timestamps: true
-})
+  {
+    timestamps: true,
+  }
+);
 
-const Book = mongoose.model<IBook>("Author", bookSchema)
-export default Book;
+const Review = mongoose.model<IReview>("Review", reviewSchema);
+export default Review;
