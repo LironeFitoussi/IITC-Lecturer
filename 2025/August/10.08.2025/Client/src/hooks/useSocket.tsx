@@ -1,19 +1,22 @@
-import { useEffect, useRef } from "react";
-import { io, Socket } from 'socket.io-client'
-
+import { io, Socket } from 'socket.io-client';
+import { useRef, useEffect } from 'react';
 
 const useSocket = () => {
     const socketRef = useRef<Socket | null>(null);
 
     useEffect(() => {
-        socketRef.current = io('http://localhost:3000')
+        // Initialize socket connection
+        socketRef.current = io('http://localhost:3001');
 
+        // Cleanup on unmount
         return () => {
-            socketRef.current?.disconnect()
-        }
-    }, [])
+            if (socketRef.current) {
+                socketRef.current.disconnect();
+            }
+        };
+    }, []);
 
-    return socketRef.current
-}
+    return socketRef.current;
+};
 
-export default useSocket
+export default useSocket;

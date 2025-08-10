@@ -1,64 +1,68 @@
-import React, { useState} from 'react'
-import useSocket from './hooks/useSocket'
-function App() {
-  const [messages, setMessages] = useState<string[]>([])
-  const [messageInput, setMessageInput] = useState("")
+import React, { useState, useEffect } from 'react';
+import useSocket from './hooks/useSocket';
+const App: React.FC = () => {
+  const [messages, setMessages] = useState<string[]>([]);
+  const [messageInput, setMessageInput] = useState('');
 
   const socket = useSocket()
 
-  function handleSubmitMessage() {
-    if (socket && messageInput.trim()) {
-      socket.emit('message', messageInput, socket.id)
-      setMessageInput('')
-    }
-  }
+  if (!socket) return <div>Loading...</div>;
+  
+  useEffect(() => {
+    socket.on('message', (message: string) => {
+      setMessages(prev => [...prev, `${message}`]);
+    });
+  }, []);
 
-  function handleSendMessage (e: React.KeyboardEvent) {
-    if (e.key === 'Enter') {
-      handleSubmitMessage()
+  const handleSendMessage = () => {
+    if (messageInput.trim() && socket) {
+      socket.emit('message', messageInput, socket.id);
+      setMessageInput('');
     }
-  }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSendMessage();
+    }
+  };
 
   return (
-    <>
-      <div className='min-h-screen bg-gray-100 p-4'>
-        <div className='max-w-4xl mx-auto '>
-          <div className='flex justify-between items-center mb-4 flex-col'>
-            <h1 className='text-2xl font-bold'>
-              Basice Socket.io Chat
-            </h1>
-
-            {/* Chat */}
-            <div className='bg-white rounded-lg p-4 mb-4 h-96 overflow-y-auto'>
-              {messages.map((msg, idx) => (
-                <div key={msg+idx} className='mb-2 p-2 bg-blue-100 rounded'>
-                  {msg}
-                </div>
-              ))}
+    <div className="min-h-screen bg-gray-100 p-4">
+      <div className="max-w-4xl mx-auto">
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-2xl font-bold">Basic Socket.io Chat</h1>
+        </div>
+        
+        {/* Messages */}
+        <div className="bg-white rounded-lg p-4 mb-4 h-96 overflow-y-auto">
+          {messages.map((message, index) => (
+            <div key={index} className="mb-2 p-2 bg-blue-100 rounded">
+              {message}
             </div>
+          ))}
+        </div>
 
-            {/* Input */}
-            <div className='flex gap-2'>
-              <input 
-                type="text"
-                value={messageInput}
-                onChange={(e) => setMessageInput(e.target.value)}
-                placeholder='Type your message...'
-                onKeyDownCapture={handleSendMessage}
-                className='flex-1 px-3 py-2 border rounded'
-              />
-              <button 
-                onClick={handleSubmitMessage} 
-                className='px-4 py-4 bg-blue-500 text-white rounded hover:bg-blue-600' 
-              >
-                Send
-              </button>
-            </div>
-          </div>
+        {/* Input */}
+        <div className="flex gap-2">
+          <input
+            type="text"
+            value={messageInput}
+            onChange={(e) => setMessageInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Type a message..."
+            className="flex-1 px-3 py-2 border rounded"
+          />
+          <button
+            onClick={handleSendMessage}
+            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          >
+            Send
+          </button>
         </div>
       </div>
-    </>
-  )
-}
+    </div>
+  );
+};
 
-export default App
+export default App; 

@@ -1,6 +1,6 @@
 import express from 'express';
 import { createServer } from 'http';
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import cors from 'cors';
 
 const app = express();
@@ -21,7 +21,7 @@ app.get('/', (req, res) => {
 
 const connectedUsers = new Map<string, { id: string, username?: string }>();
 
-io.on('connection', (socket: any) => {
+io.on('connection', (socket: Socket) => {
   console.log(`User ${socket.id} connected to enhanced server`);
   
   connectedUsers.set(socket.id, { id: socket.id });
