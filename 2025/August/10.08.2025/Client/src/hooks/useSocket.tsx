@@ -1,22 +1,40 @@
 import { io, Socket } from 'socket.io-client';
-import { useRef, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
-const useSocket = () => {
-    const socketRef = useRef<Socket | null>(null);
+interface Props {
+  username: string;
+}
 
-    useEffect(() => {
-        // Initialize socket connection
-        socketRef.current = io('http://localhost:3001');
+const useSocket = ({ username }: Props) => {
+  const [socket, setSocket] = useState<Socket | null>(null);
 
-        // Cleanup on unmount
-        return () => {
-            if (socketRef.current) {
-                socketRef.current.disconnect();
-            }
-        };
-    }, []);
+  useEffect(() => {
+    const instance = io('http://localhost:3001', {
+      auth: {
+        username: username
+      }
+    });
+    setSocket(instance);
 
-    return socketRef.current;
+    instance.on('connect', () => {
+      console.log('Connected to server');
+    });
+
+    instance.on('disconnect', () => {
+      console.log('Disconnected from server');
+    });
+
+    instance.on('connect_error', (error) => {
+      console.error('Connection error:', error);
+    });
+
+    return () => {
+      instance.disconnect();
+      setSocket(null);
+    };
+  }, []);
+
+  return socket;
 };
 
 export default useSocket;
