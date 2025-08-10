@@ -9,7 +9,7 @@ const httpServer = createServer(app)
 
 const io = new Server(httpServer, {
     cors: {
-        origin: 'http://localhost:5173',
+        origin: '*',
         methods: ['GET', 'POST']
     }
 });
@@ -24,8 +24,12 @@ app.get('/', (req, res) => {
 });
 
 io.on('connection', (socket) => {
-    console.log(`User: ${socket.id} connected to our server`);
-    
+    console.log(`User: ${socket.id} connected to our server`);  
+
+    socket.on('message', (message: string, socketId: string) => {
+        console.log(`Message: ${message} | From: ${socketId}`);
+        io.emit('message', message)
+    })
 })
 
 httpServer.listen(PORT, () => {

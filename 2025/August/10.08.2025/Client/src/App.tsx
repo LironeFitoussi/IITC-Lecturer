@@ -1,41 +1,62 @@
-import { useEffect, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import { io } from 'socket.io-client'
-
+import React, { useState} from 'react'
+import useSocket from './hooks/useSocket'
 function App() {
-  const [count, setCount] = useState(0)
-  const [socket, setSocket] = useState<any>(null)
-  // TODO: Find th correct type to use for socekts
+  const [messages, setMessages] = useState<string[]>([])
+  const [messageInput, setMessageInput] = useState("")
 
-  useEffect(() => {
-    const newSocket = io('http://localhost:3000')
-    setSocket(newSocket)
-  }, [])
+  const socket = useSocket()
+
+  function handleSubmitMessage() {
+    if (socket && messageInput.trim()) {
+      socket.emit('message', messageInput, socket.id)
+      setMessageInput('')
+    }
+  }
+
+  function handleSendMessage (e: React.KeyboardEvent) {
+    if (e.key === 'Enter') {
+      handleSubmitMessage()
+    }
+  }
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <div className='min-h-screen bg-gray-100 p-4'>
+        <div className='max-w-4xl mx-auto '>
+          <div className='flex justify-between items-center mb-4 flex-col'>
+            <h1 className='text-2xl font-bold'>
+              Basice Socket.io Chat
+            </h1>
+
+            {/* Chat */}
+            <div className='bg-white rounded-lg p-4 mb-4 h-96 overflow-y-auto'>
+              {messages.map((msg, idx) => (
+                <div key={msg+idx} className='mb-2 p-2 bg-blue-100 rounded'>
+                  {msg}
+                </div>
+              ))}
+            </div>
+
+            {/* Input */}
+            <div className='flex gap-2'>
+              <input 
+                type="text"
+                value={messageInput}
+                onChange={(e) => setMessageInput(e.target.value)}
+                placeholder='Type your message...'
+                onKeyDownCapture={handleSendMessage}
+                className='flex-1 px-3 py-2 border rounded'
+              />
+              <button 
+                onClick={handleSubmitMessage} 
+                className='px-4 py-4 bg-blue-500 text-white rounded hover:bg-blue-600' 
+              >
+                Send
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }
