@@ -15,6 +15,9 @@ interface UserEvent {
     username: string;
 }
 
+interface TypingProps {
+    username: string  
+  }
 interface Props {
     setUserCount: (count: number) => void;
     username: string;
@@ -23,7 +26,7 @@ interface Props {
 const Chat = ({ setUserCount, username }: Props) => {
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [messageInput, setMessageInput] = useState('');
-
+    const [userTyping, setUserTyping] = useState<string>('')
     const socket = useSocket({ username });
 
     useEffect(() => {
@@ -66,8 +69,15 @@ const Chat = ({ setUserCount, username }: Props) => {
             }]);
         });
 
-        // No explicit user count request; rely on live events and initial server emit
+        socket.on('typing', (data: TypingProps) => {
+            setUserTyping(data.username)
+        })
 
+        socket.on('stopTyping', () => {
+            setUserTyping('')
+        })
+
+        // No explicit user count request; rely on live events and initial server emit
         return () => {
             socket.off('message');
             socket.off('userCount');
@@ -91,6 +101,22 @@ const Chat = ({ setUserCount, username }: Props) => {
 
     const formatTime = (timestamp: Date) => {
         return new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    };
+
+    let typingTimeout: ReturnType<typeof setTimeout>
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setMessageInput(e.target.value);
+        if (socket) {
+            // Is Typing Logic
+            socket.emit('typing', { username })
+        }
+
+        clearTimeout(typingTimeout)
+
+        typingTimeout = setTimeout(() => {
+            socket?.emit('stopTyping', {username})
+        }, 5000)
     };
 
     return (
@@ -122,12 +148,18 @@ const Chat = ({ setUserCount, username }: Props) => {
                 ))}
             </div>
 
+            {/* Typing Notification */}
+                { userTyping && (
+                    <div>
+                        <p className='p-4 bg-amber-500 text-blue-500'>{`${userTyping} is Typing...`}</p>
+                    </div>
+                )}
             {/* Input */}
             <div className="flex gap-2">
                 <input
                     type="text"
                     value={messageInput}
-                    onChange={(e) => setMessageInput(e.target.value)}
+                    onChange={handleInputChange}
                     onKeyDown={handleKeyDown}
                     placeholder="Type a message..."
                     className="flex-1 px-3 py-2 border rounded"

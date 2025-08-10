@@ -72,7 +72,18 @@ io.on('connection', (socket: Socket) => {
     }
   });
 
-  // No explicit getUserCount handler; clients rely on initial and broadcast events
+
+  interface TypingProps {
+    username: string  
+  }
+
+  socket.on('typing', ({ username }: TypingProps) => {
+    socket.broadcast.emit('typing',{ username});
+  })
+
+  socket.on('stopTyping', () => {
+    socket.broadcast.emit('stopTyping');
+  })
 
   // Handle disconnect
   socket.on('disconnect', () => {
