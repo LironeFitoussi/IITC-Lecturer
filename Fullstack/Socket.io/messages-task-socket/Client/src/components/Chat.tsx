@@ -19,19 +19,10 @@ interface Props {
 }
 
 const Chat = ({ setUserCount, username }: Props) => {
-    // TODO: Replace dummy users with live `socket.on('users', ...)` updates
-    const [users, _setUsers] = useState<User[]>([{
-        id: 'u1', username: 'Alice'
-    }, {
-        id: 'u2', username: 'Bob'
-    }, {
-        id: 'u3', username: 'Charlie'
-    }]);
+    const [users, setUsers] = useState<User[]>([]);
 
     // TODO: Replace with live messages (public + private) from server events
-    const [messages, setMessages] = useState<UiMessage[]>([{
-        id: 'm1', text: 'Welcome to the chat!', userId: 'system', username: 'System', timestamp: new Date().toISOString()
-    } as PublicMessage]);
+    const [messages, setMessages] = useState<UiMessage[]>([]);
 
     const [messageInput, setMessageInput] = useState('');
     const [userTyping, setUserTyping] = useState<string>('');
@@ -98,13 +89,11 @@ const Chat = ({ setUserCount, username }: Props) => {
             setUserTyping('')
         })
 
-        // TODO: Listen for live users list
-        // socket.on('users', (list: User[]) => setUsers(list));
+        socket.on('users', (list: User[]) => setUsers(list));
 
-        // TODO: Listen for private messages from server
-        // socket.on('privateMessage', (payload: PrivateMessage) => {
-        //   setMessages(prev => [...prev, { ...payload, isPrivate: true }]);
-        // });
+        socket.on('privateMessage', (payload: PrivateMessage) => {
+          setMessages(prev => [...prev, { ...payload, isPrivate: true }]);
+        });
 
         // No explicit user count request; rely on live events and initial server emit
         return () => {
@@ -114,8 +103,8 @@ const Chat = ({ setUserCount, username }: Props) => {
             socket.off('userLeft');
             socket.off('typing');
             socket.off('stopTyping');
-            // socket.off('users');
-            // socket.off('privateMessage');
+            socket.off('users');
+            socket.off('privateMessage');
         };
     }, [socket]);
 
@@ -126,12 +115,14 @@ const Chat = ({ setUserCount, username }: Props) => {
 
     const handleSendMessage = () => {
         const text = messageInput.trim();
-        if (!text) return; // TODO: show friendly error for empty text
+        if (!text) return; 
 
+        if (!socket) return;
         // Private DM flow (UI only; TODO: wire to server)
         if (selectedUserId) {
             if (selectedUserId === selfId) {
                 // TODO: block selecting self in UsersSidebar and here
+                alert("You cant select yourself")
                 return;
             }
 
@@ -145,7 +136,7 @@ const Chat = ({ setUserCount, username }: Props) => {
                 isPrivate: true,
             };
 
-            // TODO: socket.emit('privateMessage', { toUserId: selectedUserId, text })
+            socket.emit('privateMessage', { toUserId: selectedUserId, text })
             setMessages(prev => [...prev, payload]);
             setMessageInput('');
             return;

@@ -38,6 +38,8 @@ const UsersSidebar: React.FC<UsersSidebarProps> = ({ users, selfId, selectedUser
                 aria-selected={isSelected}
                 onClick={() => {
                   // TODO: Prevent selecting self in real logic. For UI demo we still allow highlight.
+                  // Comapre u.id tiu current active user
+                  if (isSelf) return 
                   onSelect(u.id);
                 }}
                 className={`w-full text-left px-2 py-2 rounded-lg border flex items-center justify-between transition-colors focus:outline-none focus:ring-2 ${

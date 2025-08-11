@@ -7,7 +7,7 @@ import Chat from './components/Chat';
 const App: React.FC = () => {
   const [userCount, setUserCount] = useState(0);
   const [username, setUsername] = useState('');
-  // TODO: Consider lifting selectedUserId to App if you want global control
+  // Consider lifting selectedUserId to App if you want global control
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
