@@ -38,19 +38,23 @@ app.get('/', (req, res) => {
   res.json({ message: 'Basic Chat Server Running!' });
 });
 
+type RoomData = {
+  roomName: string,
+  [key: string]: any
+}
 // Store connected users (authoritative in-memory list)
 let userArray: User[] = [];
-let rooms: string[] = []
+let rooms: RoomData[] = []
 
 interface TypingProps {
-  username: string  
+  username: string
 }
 
 io.on('connection', (socket: Socket) => {
   console.log(`User ${socket.id} connected to basic server`);
 
   console.log(socket.handshake.auth.username);
-  
+
   // Add user to list
   userArray.push({
     id: socket.id,
@@ -65,16 +69,16 @@ io.on('connection', (socket: Socket) => {
 
   // Broadcast user joined event to all OTHER users
   console.log(`Broadcasting userJoined to others: ${socket.id}, count: ${userArray.length}`);
-  socket.broadcast.emit('userJoined', { 
-    userId: socket.id,  
+  socket.broadcast.emit('userJoined', {
+    userId: socket.id,
     username: socket.handshake.auth.username,
     userCount: userArray.length
   });
-  
+
   // Send current user count to the new user
   console.log(`Sending userCount ${userArray.length} to ${socket.id}`);
   socket.emit('userCount', userArray.length);
-  
+
   // Handle incoming public messages
   socket.on('message', (data: { text: string; userId: string }) => {
     if (data.text && data.text.trim()) {
@@ -85,9 +89,9 @@ io.on('connection', (socket: Socket) => {
         username: userArray.find(user => user.id === data.userId)?.username || 'Anonymous',
         timestamp: new Date()
       };
-      
+
       console.log(`Message from ${message.userId}: ${message.text}`);
-      
+
       // Broadcast message to all clients
       io.emit('message', message);
     }
@@ -129,7 +133,7 @@ io.on('connection', (socket: Socket) => {
 
   // Typing events
   socket.on('typing', ({ username }: TypingProps) => {
-    socket.broadcast.emit('typing',{ username});
+    socket.broadcast.emit('typing', { username });
   })
 
   // Stop typing events
@@ -156,15 +160,18 @@ io.on('connection', (socket: Socket) => {
   });
 
   // Join Room
-  socket.on("joinRoom", (roomName) => {
-    socket.join(roomName);
+  socket.on("joinRoom", (roomPayload) => {
+    socket.join(roomPayload);
     // console.log(`====${socket.id} joined room: ${roomName}====`);
 
-    if (!rooms.includes(roomName)) {
-      rooms.push(roomName)
+    // Assuming rooms is now an array of objects, e.g. { name: string, ... }
+    if (!rooms.some(room => roomPayload === room.roomName)) {
+      rooms.push({ roomName: roomPayload });
     }
+
     // Notify others in the room
-    socket.to(roomName).emit("message", `${socket.id} joined the room.`);
+    socket.to(roomPayload).emit("message", `${socket.id} joined the room.`);
+
     io.emit('roomsMap', rooms)
   });
 
@@ -173,6 +180,19 @@ io.on('connection', (socket: Socket) => {
     socket.leave(roomName);
     console.log(`${socket.id} left room: ${roomName}`);
   });
+
+  socket.on('colorSelect', (color, currentRoom, username) => {
+    // Find the index of the room object and update it immutably to ensure array reference changes
+    const roomIndex = rooms.findIndex(room => room.roomName === currentRoom);
+    if (roomIndex !== -1) {
+      rooms[roomIndex] = {
+        ...rooms[roomIndex],
+        [username]: color
+      };
+    }
+    // Optionally, emit an event to notify clients of the update
+    io.emit('roomsMap', rooms);
+  })
 });
 
 const PORT = 3001;
