@@ -1,0 +1,44 @@
+import { useRef, useState } from 'react';
+
+interface Props {
+    setUsername: (username: string) => void;
+}
+
+const Login = ({ setUsername }: Props) => {
+
+    const inputRef = useRef<HTMLInputElement>(null);
+    const [error, setError] = useState<string>('');
+
+    function handleLogin() {
+        const value = (inputRef.current?.value || '').trim();
+        if (value.length < 3) {
+            setError('Username must be at least 3 characters');
+            return;
+        }
+        setError('');
+        setUsername(value);
+    }
+
+    return (
+        <div className='bg-white/90 backdrop-blur rounded-xl p-6 border shadow-sm max-w-md mx-auto'>
+            <h1 className='text-xl font-semibold mb-4 text-gray-800'>Welcome</h1>
+            <div className='flex gap-2'>
+                <input 
+                    type="text" 
+                    placeholder="Username" 
+                    className='flex-1 border-2 border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-200' 
+                    ref={inputRef}
+                />
+                <button
+                    onClick={handleLogin}
+                    className='bg-blue-600 text-white rounded-md px-4 hover:bg-blue-700'
+                >
+                    Enter
+                </button>
+            </div>
+            {error && <p className='mt-2 text-sm text-red-600'>{error}</p>}
+        </div>
+    )
+}
+
+export default Login;
