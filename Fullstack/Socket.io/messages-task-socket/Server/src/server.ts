@@ -61,6 +61,7 @@ io.on('connection', (socket: Socket) => {
 
   // Emit full users list to all clients
   io.emit('users', userArray);
+  socket.emit('roomsMap', rooms)
 
   // Broadcast user joined event to all OTHER users
   console.log(`Broadcasting userJoined to others: ${socket.id}, count: ${userArray.length}`);
@@ -159,10 +160,12 @@ io.on('connection', (socket: Socket) => {
     socket.join(roomName);
     // console.log(`====${socket.id} joined room: ${roomName}====`);
 
-    rooms.push(roomName)
+    if (!rooms.includes(roomName)) {
+      rooms.push(roomName)
+    }
     // Notify others in the room
     socket.to(roomName).emit("message", `${socket.id} joined the room.`);
-    socket.emit('roomsMap', rooms)
+    io.emit('roomsMap', rooms)
   });
 
   // Leave a room
