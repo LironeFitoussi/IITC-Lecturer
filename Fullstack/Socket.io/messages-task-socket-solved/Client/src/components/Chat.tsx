@@ -8,7 +8,6 @@ interface UserEvent {
     userCount: number;
     username: string;
 }
-
 interface TypingProps {
     username: string
 }
