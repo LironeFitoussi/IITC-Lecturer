@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWT Bearer Token Example</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .section { margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        button { padding: 10px 15px; margin: 5px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        input { padding: 8px; margin: 5px; border: 1px solid #ddd; border-radius: 4px; width: 200px; }
+        .output { background: #f8f9fa; padding: 15px; border-radius: 4px; margin-top: 10px; white-space: pre-wrap; }
+        .error { background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
+        .success { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
+        .token-info { font-size: 12px; color: #666; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <h1>JWT Bearer Token API Example</h1>
+    <p>This example shows how to use JWT Bearer tokens with your API from frontend JavaScript.</p>
+    
+    <div class="section">
+        <h2>🔐 Authentication</h2>
+        
+        <h3>Register New User</h3>
+        <div>
+            <input type="text" id="regName" placeholder="Full Name" value="Test User">
+            <input type="email" id="regEmail" placeholder="Email" value="test@example.com">
+            <input type="password" id="regPassword" placeholder="Password" value="Password123">
+            <button onclick="register()">Register</button>
+        </div>
+        
+        <h3>Login Existing User</h3>
+        <div>
+            <input type="email" id="loginEmail" placeholder="Email" value="test@example.com">
+            <input type="password" id="loginPassword" placeholder="Password" value="Password123">
+            <button onclick="login()">Login</button>
+        </div>
+        
+        <button onclick="logout()">Logout</button>
+        
+        <div class="token-info">
+            <strong>Current Token:</strong> <span id="tokenDisplay">None</span>
+            <br><strong>Login Status:</strong> <span id="loginStatus">Not logged in</span>
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2>🔒 Protected Endpoints</h2>
+        <p>These require a valid JWT token in Authorization header:</p>
+        
+        <button onclick="getCurrentUser()" id="getMeBtn" disabled>Get My Profile</button>
+        <button onclick="getAllUsers()" id="getUsersBtn" disabled>Get All Users</button>
+        <button onclick="deleteUser()" id="deleteBtn" disabled>Delete Test User</button>
+    </div>
+    
+    <div class="section">
+        <h2>📊 API Response</h2>
+        <div id="output" class="output">Make an API call to see the response...</div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3001/api';
+        let authToken = localStorage.getItem('authToken');
+        let currentUser = null;
+
+        // Update UI based on auth state
+        function updateAuthState() {
+            const isLoggedIn = !!authToken;
+            
+            document.getElementById('tokenDisplay').textContent = 
+                authToken ? `${authToken.substring(0, 20)}...` : 'None';
+            
+            document.getElementById('loginStatus').textContent = 
+                isLoggedIn ? `Logged in as ${currentUser?.email || 'User'}` : 'Not logged in';
+            
+            // Enable/disable protected endpoint buttons
+            document.getElementById('getMeBtn').disabled = !isLoggedIn;
+            document.getElementById('getUsersBtn').disabled = !isLoggedIn;
+            document.getElementById('deleteBtn').disabled = !isLoggedIn;
+        }
+
+        // Initialize auth state
+        updateAuthState();
+        if (authToken) {
+            getCurrentUser(); // Get user info if token exists
+        }
+
+        // Helper function to make API calls
+        async function apiCall(endpoint, options = {}) {
+            try {
+                const config = {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...(authToken && { 'Authorization': `Bearer ${authToken}` })
+                    },
+                    ...options
+                };
+
+                const response = await fetch(`${API_BASE}${endpoint}`, config);
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.message || `HTTP ${response.status}`);
+                }
+                
+                displayOutput(data, 'success');
+                return data;
+                
+            } catch (error) {
+                displayOutput({ error: error.message }, 'error');
+                
+                // Handle token expiration
+                if (error.message.includes('expired') || error.message.includes('Invalid token')) {
+                    localStorage.removeItem('authToken');
+                    authToken = null;
+                    currentUser = null;
+                    updateAuthState();
+                }
+                
+                throw error;
+            }
+        }
+
+        // Display API response
+        function displayOutput(data, type = 'success') {
+            const output = document.getElementById('output');
+            output.textContent = JSON.stringify(data, null, 2);
+            output.className = `output ${type}`;
+        }
+
+        // Authentication functions
+        async function register() {
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            
+            try {
+                const data = await apiCall('/auth/register', {
+                    method: 'POST',
+                    body: JSON.stringify({ name, email, password })
+                });
+                
+                // Save token and update state
+                authToken = data.token;
+                currentUser = data.user;
+                localStorage.setItem('authToken', authToken);
+                updateAuthState();
+                
+            } catch (error) {
+                console.error('Registration failed:', error);
+            }
+        }
+
+        async function login() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            try {
+                const data = await apiCall('/auth/login', {
+                    method: 'POST',
+                    body: JSON.stringify({ email, password })
+                });
+                
+                // Save token and update state
+                authToken = data.token;
+                currentUser = data.user;
+                localStorage.setItem('authToken', authToken);
+                updateAuthState();
+                
+            } catch (error) {
+                console.error('Login failed:', error);
+            }
+        }
+
+        async function logout() {
+            try {
+                await apiCall('/auth/logout', { method: 'POST' });
+            } catch (error) {
+                console.error('Logout request failed:', error);
+            } finally {
+                // Clear local auth state regardless of API response
+                localStorage.removeItem('authToken');
+                authToken = null;
+                currentUser = null;
+                updateAuthState();
+                displayOutput({ message: 'Logged out successfully' }, 'success');
+            }
+        }
+
+        // Protected endpoint functions
+        async function getCurrentUser() {
+            try {
+                const data = await apiCall('/auth/me');
+                currentUser = data.user;
+                updateAuthState();
+            } catch (error) {
+                console.error('Get current user failed:', error);
+            }
+        }
+
+        async function getAllUsers() {
+            try {
+                await apiCall('/auth/users');
+            } catch (error) {
+                console.error('Get all users failed:', error);
+            }
+        }
+
+        async function deleteUser() {
+            const userId = prompt('Enter user ID to delete (check "Get All Users" first):');
+            if (!userId) return;
+            
+            try {
+                await apiCall(`/auth/users/${userId}`, { method: 'DELETE' });
+            } catch (error) {
+                console.error('Delete user failed:', error);
+            }
+        }
+
+        // Check server health on page load
+        fetch(`${API_BASE}/health`)
+            .then(response => response.json())
+            .then(data => {
+                console.log('✅ Server is running:', data.message);
+            })
+            .catch(error => {
+                console.error('❌ Server not available:', error);
+                displayOutput({ 
+                    error: 'Server not available. Make sure backend is running on port 3001.' 
+                }, 'error');
+            });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,187 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+/* Redux Counter Styles */
+.counter-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  border: 2px solid #646cff;
+  border-radius: 8px;
+  background-color: #1a1a1a;
+}
+
+.counter-display {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background-color: #2a2a2a;
+  border-radius: 6px;
+  border-left: 4px solid #61dafb;
+}
+
+.counter-display h2 {
+  color: #61dafb;
+  margin: 0 0 0.5rem 0;
+  font-size: 1.8rem;
+}
+
+.counter-controls {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background-color: #2a2a2a;
+  border-radius: 6px;
+  border-left: 4px solid #646cff;
+}
+
+.counter-controls h3 {
+  color: #646cff;
+  margin: 0 0 1rem 0;
+}
+
+.button-group {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.button-group button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border: 1px solid #646cff;
+  border-radius: 4px;
+  background-color: #1a1a1a;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.button-group button:hover {
+  border-color: #747bff;
+  background-color: #646cff;
+}
+
+.custom-increment {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.custom-increment input {
+  padding: 0.5rem;
+  border: 1px solid #646cff;
+  border-radius: 4px;
+  background-color: #1a1a1a;
+  color: #ffffff;
+  width: 100px;
+}
+
+.custom-increment button {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  border: 1px solid #646cff;
+  border-radius: 4px;
+  background-color: #1a1a1a;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.custom-increment button:hover {
+  border-color: #747bff;
+  background-color: #646cff;
+}
+
+.nested-counter {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background-color: #2a2a2a;
+  border-radius: 6px;
+  border-left: 4px solid #f39c12;
+}
+
+.nested-counter h3 {
+  color: #f39c12;
+  margin: 0 0 1rem 0;
+}
+
+.counter-info {
+  margin: 1rem 0;
+}
+
+.counter-info .even {
+  color: #2ecc71;
+  font-weight: bold;
+}
+
+.counter-info .odd {
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+.nested-controls {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin: 1rem 0;
+}
+
+.increment-btn, .decrement-btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  border: 1px solid #f39c12;
+  border-radius: 4px;
+  background-color: #1a1a1a;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.increment-btn:hover, .decrement-btn:hover {
+  border-color: #e67e22;
+  background-color: #f39c12;
+  color: #1a1a1a;
+}

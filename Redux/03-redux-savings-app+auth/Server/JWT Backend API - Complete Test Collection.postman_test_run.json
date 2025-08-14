@@ -1,0 +1,456 @@
+{
+	"id": "141605c5-1a34-4adb-a4e2-819fedb1a0ee",
+	"name": "JWT Backend API - Complete Test Collection",
+	"timestamp": "2025-07-22T12:41:56.208Z",
+	"collection_id": "31145245-b4af45ba-818d-4ae5-9409-b9feb4773abf",
+	"folder_id": 0,
+	"environment_id": "31145245-fd627b7f-c206-4c2e-8833-fa0e44d041a4",
+	"totalPass": 37,
+	"delay": 0,
+	"persist": true,
+	"status": "finished",
+	"startedAt": "2025-07-22T12:41:55.651Z",
+	"totalFail": 2,
+	"results": [
+		{
+			"id": "0052a955-a403-4062-ae3a-b5317f3926fa",
+			"name": "Health Check",
+			"url": "http://localhost:3001/api/health",
+			"time": 8,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response time is less than 2000ms": true,
+				"Content-Type is application/json": true,
+				"Status code is 200": true,
+				"Response has required fields": true,
+				"Server is running message": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 2000ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Content-Type is application/json": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response has required fields": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Server is running message": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				8
+			],
+			"allTests": [
+				{
+					"Response time is less than 2000ms": true,
+					"Content-Type is application/json": true,
+					"Status code is 200": true,
+					"Response has required fields": true,
+					"Server is running message": true
+				}
+			]
+		},
+		{
+			"id": "e7e86bd0-5fdd-44a7-9829-db74fa0f0432",
+			"name": "Register User",
+			"url": "http://localhost:3001/api/auth/register",
+			"time": 94,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"Response time is less than 2000ms": true,
+				"Content-Type is application/json": true,
+				"Status code is 201": true,
+				"User created successfully": true,
+				"HTTP-only cookie is set": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 2000ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Content-Type is application/json": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 201": {
+					"pass": 1,
+					"fail": 0
+				},
+				"User created successfully": {
+					"pass": 1,
+					"fail": 0
+				},
+				"HTTP-only cookie is set": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				94
+			],
+			"allTests": [
+				{
+					"Response time is less than 2000ms": true,
+					"Content-Type is application/json": true,
+					"Status code is 201": true,
+					"User created successfully": true,
+					"HTTP-only cookie is set": true
+				}
+			]
+		},
+		{
+			"id": "fe84d0ae-15d6-4680-9a7a-67ea87c60457",
+			"name": "Login User",
+			"url": "http://localhost:3001/api/auth/login",
+			"time": 68,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response time is less than 2000ms": true,
+				"Content-Type is application/json": true,
+				"Status code is 200": true,
+				"Login successful": true,
+				"HTTP-only cookie is set": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 2000ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Content-Type is application/json": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Login successful": {
+					"pass": 1,
+					"fail": 0
+				},
+				"HTTP-only cookie is set": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				68
+			],
+			"allTests": [
+				{
+					"Response time is less than 2000ms": true,
+					"Content-Type is application/json": true,
+					"Status code is 200": true,
+					"Login successful": true,
+					"HTTP-only cookie is set": true
+				}
+			]
+		},
+		{
+			"id": "72be3d0e-be91-417c-a7f3-8c5d090ac17b",
+			"name": "Get Current User (Me)",
+			"url": "http://localhost:3001/api/auth/me",
+			"time": 2,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response time is less than 2000ms": true,
+				"Content-Type is application/json": true,
+				"Status code is 200": true,
+				"User data returned": true,
+				"No password in response": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 2000ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Content-Type is application/json": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"User data returned": {
+					"pass": 1,
+					"fail": 0
+				},
+				"No password in response": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				2
+			],
+			"allTests": [
+				{
+					"Response time is less than 2000ms": true,
+					"Content-Type is application/json": true,
+					"Status code is 200": true,
+					"User data returned": true,
+					"No password in response": true
+				}
+			]
+		},
+		{
+			"id": "fb3f000e-c58a-4952-be2c-14e89da3319e",
+			"name": "Get All Users",
+			"url": "http://localhost:3001/api/auth/users",
+			"time": 3,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response time is less than 2000ms": true,
+				"Content-Type is application/json": true,
+				"Status code is 200": true,
+				"Users list returned": true,
+				"No passwords in user list": true,
+				"Total count matches array length": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 2000ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Content-Type is application/json": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Users list returned": {
+					"pass": 1,
+					"fail": 0
+				},
+				"No passwords in user list": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Total count matches array length": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				3
+			],
+			"allTests": [
+				{
+					"Response time is less than 2000ms": true,
+					"Content-Type is application/json": true,
+					"Status code is 200": true,
+					"Users list returned": true,
+					"No passwords in user list": true,
+					"Total count matches array length": true
+				}
+			]
+		},
+		{
+			"id": "af114cd8-4848-47f1-ab9b-7db130de46bb",
+			"name": "Register Second User",
+			"url": "http://localhost:3001/api/auth/register",
+			"time": 71,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"Response time is less than 2000ms": true,
+				"Content-Type is application/json": true,
+				"Status code is 201": true,
+				"Second user created successfully": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 2000ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Content-Type is application/json": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 201": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Second user created successfully": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				71
+			],
+			"allTests": [
+				{
+					"Response time is less than 2000ms": true,
+					"Content-Type is application/json": true,
+					"Status code is 201": true,
+					"Second user created successfully": true
+				}
+			]
+		},
+		{
+			"id": "f5a0f279-2758-4d5e-80c2-c836fce1fd3e",
+			"name": "Delete User",
+			"url": "http://localhost:3001/api/auth/users/175318811615818jazbax3",
+			"time": 2,
+			"responseCode": {
+				"code": 400,
+				"name": "Bad Request"
+			},
+			"tests": {
+				"Response time is less than 2000ms": true,
+				"Content-Type is application/json": true,
+				"Status code is 200": false,
+				"User deleted successfully": false
+			},
+			"testPassFailCounts": {
+				"Response time is less than 2000ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Content-Type is application/json": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 0,
+					"fail": 1
+				},
+				"User deleted successfully": {
+					"pass": 0,
+					"fail": 1
+				}
+			},
+			"times": [
+				2
+			],
+			"allTests": [
+				{
+					"Response time is less than 2000ms": true,
+					"Content-Type is application/json": true,
+					"Status code is 200": false,
+					"User deleted successfully": false
+				}
+			]
+		},
+		{
+			"id": "b3190adf-da45-4e64-92bb-ad95935d7d60",
+			"name": "Logout User",
+			"url": "http://localhost:3001/api/auth/logout",
+			"time": 2,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response time is less than 2000ms": true,
+				"Content-Type is application/json": true,
+				"Status code is 200": true,
+				"Logout successful": true,
+				"Cookie is cleared": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 2000ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Content-Type is application/json": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Logout successful": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Cookie is cleared": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				2
+			],
+			"allTests": [
+				{
+					"Response time is less than 2000ms": true,
+					"Content-Type is application/json": true,
+					"Status code is 200": true,
+					"Logout successful": true,
+					"Cookie is cleared": true
+				}
+			]
+		}
+	],
+	"count": 1,
+	"totalTime": 250,
+	"collection": {
+		"requests": [
+			{
+				"id": "0052a955-a403-4062-ae3a-b5317f3926fa",
+				"method": "GET"
+			},
+			{
+				"id": "e7e86bd0-5fdd-44a7-9829-db74fa0f0432",
+				"method": "POST"
+			},
+			{
+				"id": "fe84d0ae-15d6-4680-9a7a-67ea87c60457",
+				"method": "POST"
+			},
+			{
+				"id": "72be3d0e-be91-417c-a7f3-8c5d090ac17b",
+				"method": "GET"
+			},
+			{
+				"id": "fb3f000e-c58a-4952-be2c-14e89da3319e",
+				"method": "GET"
+			},
+			{
+				"id": "af114cd8-4848-47f1-ab9b-7db130de46bb",
+				"method": "POST"
+			},
+			{
+				"id": "f5a0f279-2758-4d5e-80c2-c836fce1fd3e",
+				"method": "DELETE"
+			},
+			{
+				"id": "b3190adf-da45-4e64-92bb-ad95935d7d60",
+				"method": "POST"
+			}
+		]
+	}
+}
