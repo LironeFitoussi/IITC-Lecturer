@@ -1,5 +1,4 @@
-import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
-import apiClient from '../api/client';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 // Types
 export interface User {
@@ -14,8 +13,6 @@ export interface User {
 export interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
-  isLoading: boolean;
-  error: string | null;
 }
 
 export interface LoginCredentials {
@@ -34,172 +31,85 @@ export interface RegisterCredentials {
 const initialState: AuthState = {
   user: null,
   isAuthenticated: false,
-  isLoading: false,
-  error: null,
 };
 
-// Async thunks
-export const loginUser = createAsyncThunk(
-  'auth/login',
-  async (credentials: LoginCredentials, { rejectWithValue }) => {
-    try {
-      const response = await apiClient.post('/auth/login', credentials);
-      return response.data.user;
-    } catch (error: any) {
-      return rejectWithValue(
-        error.response?.data?.message || 'Login failed'
-      );
-    }
-  }
-);
-
-export const registerUser = createAsyncThunk(
-  'auth/register',
-  async (credentials: RegisterCredentials, { rejectWithValue }) => {
-    try {
-      const response = await apiClient.post('/auth/register', credentials);
-      return response.data.user;
-    } catch (error: any) {
-      return rejectWithValue(
-        error.response?.data?.message || 'Registration failed'
-      );
-    }
-  }
-);
-
-export const logoutUser = createAsyncThunk(
-  'auth/logout',
-  async (_, { rejectWithValue }) => {
-    try {
-      await apiClient.post('/auth/logout');
-      return;
-    } catch (error: any) {
-      return rejectWithValue(
-        error.response?.data?.message || 'Logout failed'
-      );
-    }
-  }
-);
-
-export const getCurrentUser = createAsyncThunk(
-  'auth/getCurrentUser',
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await apiClient.get('/auth/me');
-      return response.data.user;
-    } catch (error: any) {
-      return rejectWithValue(
-        error.response?.data?.message || 'Failed to get user data'
-      );
-    }
-  }
-);
-
-// Auth slice
+// Auth slice with synchronous actions
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    clearError: (state) => {
-      state.error = null;
+    // Login user (mock implementation)
+    loginUser: (state, action: PayloadAction<LoginCredentials>) => {
+      // Mock user data for demo purposes
+      const mockUser: User = {
+        id: '1',
+        email: action.payload.email,
+        firstName: 'Demo',
+        lastName: 'User',
+        balance: 1000,
+        createdAt: new Date().toISOString()
+      };
+      
+      state.user = mockUser;
+      state.isAuthenticated = true;
     },
-    clearAuth: (state) => {
+
+    // Register user (mock implementation)
+    registerUser: (state, action: PayloadAction<RegisterCredentials>) => {
+      // Mock user data for demo purposes
+      const mockUser: User = {
+        id: '1',
+        email: action.payload.email,
+        firstName: action.payload.firstName,
+        lastName: action.payload.lastName,
+        balance: 1000,
+        createdAt: new Date().toISOString()
+      };
+      
+      state.user = mockUser;
+      state.isAuthenticated = true;
+    },
+
+    // Logout user
+    logoutUser: (state) => {
       state.user = null;
       state.isAuthenticated = false;
-      state.error = null;
     },
+
+    // Get current user (mock implementation)
+    getCurrentUser: () => {
+      // For demo, we'll just check if there's a user in localStorage or keep current state
+      // This could be enhanced later when adding backend
+    },
+
+    // Update user balance
     updateUserBalance: (state, action: PayloadAction<number>) => {
       if (state.user) {
         state.user.balance = action.payload;
       }
     },
-  },
-  extraReducers: (builder) => {
-    // Login
-    builder
-      .addCase(loginUser.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
-      .addCase(loginUser.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.user = action.payload;
-        state.isAuthenticated = true;
-        state.error = null;
-      })
-      .addCase(loginUser.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload as string;
-        state.isAuthenticated = false;
-        state.user = null;
-      });
 
-    // Register
-    builder
-      .addCase(registerUser.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
-      .addCase(registerUser.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.user = action.payload;
-        state.isAuthenticated = true;
-        state.error = null;
-      })
-      .addCase(registerUser.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload as string;
-        state.isAuthenticated = false;
-        state.user = null;
-      });
-
-    // Logout
-    builder
-      .addCase(logoutUser.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(logoutUser.fulfilled, (state) => {
-        state.isLoading = false;
-        state.user = null;
-        state.isAuthenticated = false;
-        state.error = null;
-      })
-      .addCase(logoutUser.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload as string;
-        // Still clear auth on logout error
-        state.user = null;
-        state.isAuthenticated = false;
-      });
-
-    // Get current user
-    builder
-      .addCase(getCurrentUser.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(getCurrentUser.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.user = action.payload;
-        state.isAuthenticated = true;
-        state.error = null;
-      })
-      .addCase(getCurrentUser.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload as string;
-        state.isAuthenticated = false;
-        state.user = null;
-      });
+    // Clear auth state
+    clearAuth: (state) => {
+      state.user = null;
+      state.isAuthenticated = false;
+    },
   },
 });
 
 // Export actions
-export const { clearError, clearAuth, updateUserBalance } = authSlice.actions;
+export const { 
+  loginUser, 
+  registerUser, 
+  logoutUser, 
+  getCurrentUser, 
+  updateUserBalance, 
+  clearAuth 
+} = authSlice.actions;
 
 // Selectors
-export const selectAuth = (state: { auth: AuthState }) => state.auth;
-export const selectUser = (state: { auth: AuthState }) => state.auth.user;
-export const selectIsAuthenticated = (state: { auth: AuthState }) => state.auth.isAuthenticated;
-export const selectAuthLoading = (state: { auth: AuthState }) => state.auth.isLoading;
-export const selectAuthError = (state: { auth: AuthState }) => state.auth.error;
+export const selectAuth = (state: { auth: AuthState; savings: any }) => state.auth;
+export const selectUser = (state: { auth: AuthState; savings: any }) => state.auth.user;
+export const selectIsAuthenticated = (state: { auth: AuthState; savings: any }) => state.auth.isAuthenticated;
 
 export default authSlice.reducer;

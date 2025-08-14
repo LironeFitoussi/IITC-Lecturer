@@ -1,6 +1,7 @@
+import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { logoutUser, selectUser } from '../../store/authSlice';
-import { selectSummary } from '../../store/savingsSlice';
+import { fetchTransactions, fetchSummary, selectSummary } from '../../store/savingsSliceNew';
 import SavingsOperations from './SavingsOperations';
 import TransactionHistory from './TransactionHistory';
 
@@ -8,6 +9,12 @@ const Dashboard: React.FC = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
   const summary = useAppSelector(selectSummary);
+
+  useEffect(() => {
+    // Fetch user data when dashboard loads
+    dispatch(fetchSummary());
+    dispatch(fetchTransactions({ limit: 20 }));
+  }, [dispatch]);
 
   const handleLogout = async () => {
     if (window.confirm('Are you sure you want to logout?')) {
