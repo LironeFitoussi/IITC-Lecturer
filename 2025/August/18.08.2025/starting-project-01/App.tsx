@@ -20,11 +20,16 @@ export default function App() {
       <StatusBar barStyle="dark-content" />
       <NavigationContainer>
         <Stack.Navigator initialRouteName='Home' screenOptions={{
-          headerTitleAlign: 'center',
-          // headerShown: false
+          // headerTitleAlign: 'center',
+          headerShown: false
         }}>
           <Stack.Screen name='Home' component={HomeScreen} options={{
-            title: 'בית'
+            title: 'בית',
+            headerStyle: {
+              backgroundColor: '#6200ee'
+            },
+            headerTintColor: '#fff',
+            headerTitleAlign: 'left' // TODO Check  On  that
           }} />
           <Stack.Screen name="Details" component={DetailsScreen} options={{
             title: 'פרטים'
