@@ -1,111 +1,168 @@
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
-// Types
-export interface Transaction {
-  id: string;
-  type: 'deposit' | 'withdraw';
-  amount: number;
-  description?: string;
-  balanceAfter: number;
-  createdAt: string;
+export interface User {
+  id: string
+  name: string
+  balance: number
+  createdAt: string
 }
 
-export interface TransactionSummary {
-  currentBalance: number;
-  totalDeposits: number;
-  totalWithdrawals: number;
-  depositCount: number;
-  withdrawalCount: number;
-  totalTransactions: number;
+export interface Transaction {
+  id: string
+  userId: string
+  type: 'deposit' | 'withdraw'
+  amount: number
+  timestamp: string
+  description?: string
 }
 
 export interface SavingsState {
-  transactions: Transaction[];
-  summary: TransactionSummary;
+  users: User[]
+  transactions: Transaction[]
+  selectedUserId: string | null
+  loading: boolean
+  error: string | null
 }
 
-// Initial state
 const initialState: SavingsState = {
+  users: [],
   transactions: [],
-  summary: {
-    currentBalance: 1000, // Starting balance for demo
-    totalDeposits: 1000,
-    totalWithdrawals: 0,
-    depositCount: 1,
-    withdrawalCount: 0,
-    totalTransactions: 1
-  },
-};
+  selectedUserId: null,
+  loading: false,
+  error: null
+}
 
-// Basic savings slice with synchronous actions
-const savingsSlice = createSlice({
+export const savingsSlice = createSlice({
   name: 'savings',
   initialState,
   reducers: {
-    // Add a deposit transaction
-    addDeposit: (state, action: PayloadAction<{ amount: number; description?: string }>) => {
-      const { amount, description } = action.payload;
-      const newTransaction: Transaction = {
+    // User management
+    addUser: (state, action: PayloadAction<{ name: string }>) => {
+      const newUser: User = {
         id: Date.now().toString(),
+        name: action.payload.name,
+        balance: 0,
+        createdAt: new Date().toISOString()
+      }
+      state.users.push(newUser)
+      state.error = null
+    },
+
+    deleteUser: (state, action: PayloadAction<string>) => {
+      const userId = action.payload
+      state.users = state.users.filter(user => user.id !== userId)
+      state.transactions = state.transactions.filter(transaction => transaction.userId !== userId)
+      if (state.selectedUserId === userId) {
+        state.selectedUserId = null
+      }
+      state.error = null
+    },
+
+    selectUser: (state, action: PayloadAction<string>) => {
+      state.selectedUserId = action.payload
+      state.error = null
+    },
+
+    clearSelectedUser: (state) => {
+      state.selectedUserId = null
+    },
+
+    // Savings operations
+    deposit: (state, action: PayloadAction<{ userId: string; amount: number; description?: string }>) => {
+      const { userId, amount, description } = action.payload
+      
+      if (amount <= 0) {
+        state.error = 'Deposit amount must be positive'
+        return
+      }
+
+      const user = state.users.find(u => u.id === userId)
+      if (!user) {
+        state.error = 'User not found'
+        return
+      }
+
+      // Update user balance
+      user.balance += amount
+
+      // Add transaction record
+      const transaction: Transaction = {
+        id: Date.now().toString(),
+        userId,
         type: 'deposit',
         amount,
-        description,
-        balanceAfter: state.summary.currentBalance + amount,
-        createdAt: new Date().toISOString()
-      };
-      
-      state.transactions.unshift(newTransaction);
-      state.summary.currentBalance += amount;
-      state.summary.totalDeposits += amount;
-      state.summary.depositCount += 1;
-      state.summary.totalTransactions += 1;
+        timestamp: new Date().toISOString(),
+        description
+      }
+      state.transactions.push(transaction)
+      state.error = null
     },
 
-    // Add a withdrawal transaction
-    addWithdrawal: (state, action: PayloadAction<{ amount: number; description?: string }>) => {
-      const { amount, description } = action.payload;
+    withdraw: (state, action: PayloadAction<{ userId: string; amount: number; description?: string }>) => {
+      const { userId, amount, description } = action.payload
+      
+      if (amount <= 0) {
+        state.error = 'Withdrawal amount must be positive'
+        return
+      }
 
-      const newTransaction: Transaction = {
+      const user = state.users.find(u => u.id === userId)
+      if (!user) {
+        state.error = 'User not found'
+        return
+      }
+
+      if (user.balance < amount) {
+        state.error = 'Insufficient funds'
+        return
+      }
+
+      // Update user balance
+      user.balance -= amount
+
+      // Add transaction record
+      const transaction: Transaction = {
         id: Date.now().toString(),
+        userId,
         type: 'withdraw',
         amount,
-        description,
-        balanceAfter: state.summary.currentBalance - amount,
-        createdAt: new Date().toISOString()
-      };
-      
-      state.transactions.unshift(newTransaction);
-      state.summary.currentBalance -= amount;
-      state.summary.totalWithdrawals += amount;
-      state.summary.withdrawalCount += 1;
-      state.summary.totalTransactions += 1;
+        timestamp: new Date().toISOString(),
+        description
+      }
+      state.transactions.push(transaction)
+      state.error = null
     },
 
-    // Clear all transactions
-    clearTransactions: (state) => {
-      state.transactions = [];
-      state.summary = {
-        currentBalance: 1000,
-        totalDeposits: 1000,
-        totalWithdrawals: 0,
-        depositCount: 1,
-        withdrawalCount: 0,
-        totalTransactions: 1
-      };
+    // Utility actions
+    clearError: (state) => {
+      state.error = null
     },
-  },
-});
+
+    setLoading: (state, action: PayloadAction<boolean>) => {
+      state.loading = action.payload
+    }
+  }
+})
 
 // Export actions
-export const { 
-  addDeposit, 
-  addWithdrawal, 
-  clearTransactions, 
-} = savingsSlice.actions;
+export const {
+  addUser,
+  deleteUser,
+  selectUser,
+  clearSelectedUser,
+  deposit,
+  withdraw,
+  clearError,
+  setLoading
+} = savingsSlice.actions
 
 // Selectors
-export const selectSavings = (state: { auth: any; savings: SavingsState }) => state.savings;
-export const selectTransactions = (state: { auth: any; savings: SavingsState }) => state.savings.transactions;
-export const selectSummary = (state: { auth: any; savings: SavingsState }) => state.savings.summary;
+export const selectAllUsers = (state: { savings: SavingsState }) => state.savings.users
+export const selectSelectedUser = (state: { savings: SavingsState }) => {
+  const selectedId = state.savings.selectedUserId
+  return selectedId ? state.savings.users.find(user => user.id === selectedId) : null
+}
+export const selectUserTransactions = (state: { savings: SavingsState }, userId: string) =>
+  state.savings.transactions.filter(transaction => transaction.userId === userId)
 
-export default savingsSlice.reducer;
+export default savingsSlice.reducer
