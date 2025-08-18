@@ -39,6 +39,8 @@ export default function App() {
 
             return <Ionicons name={icons[route.name]} size={size} color={color} />
           },
+          drawerType: 'front',
+          swipeEnabled: false,
           headerTitleAlign: 'center',
           drawerActiveTintColor: '#6200ee',
           drawerInactiveTintColor: '#999',

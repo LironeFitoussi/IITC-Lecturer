@@ -1,9 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet, Button } from 'react-native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { DrawerNavigationProp } from '@react-navigation/drawer';
 
 import { type RooStackParamList } from '../App'
-type HomeScreenNavigationProp = NativeStackNavigationProp<RooStackParamList, 'Home'>;
+// type HomeScreenNavigationProp = NativeStackNavigationProp<RooStackParamList, 'Home'>;
+type HomeScreenNavigationProp = DrawerNavigationProp<RooStackParamList, 'Home'>;
 
 const HomeScreen = ({ navigation }: {navigation: HomeScreenNavigationProp} ) => {
 
@@ -20,6 +21,10 @@ const HomeScreen = ({ navigation }: {navigation: HomeScreenNavigationProp} ) => 
       <Button 
         title='Go to Item 55'
         onPress={() => handleNavigate(55)}
+      />
+      <Button 
+        title='Open Drawer'
+        onPress={() => navigation.openDrawer()}
       />
     </View>
   );
