@@ -1,6 +1,5 @@
 import React from 'react';
 import { StatusBar } from 'react-native';
-import {  } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -8,7 +7,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from './screens/HomeScreen';
 import DetailsScreen from './screens/DetailsScreen';
 
-type RooStackParamList = {
+export type RooStackParamList = {
   Home: undefined;
   Details: { itemId: number }
 }
