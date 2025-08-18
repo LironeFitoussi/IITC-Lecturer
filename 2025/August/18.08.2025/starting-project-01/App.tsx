@@ -2,7 +2,8 @@ import React from 'react';
 import { StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 // import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+// import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createDrawerNavigator } from '@react-navigation/drawer'
 import { registerRootComponent } from 'expo';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -19,28 +20,16 @@ export type RooStackParamList = {
 }
 
 // const Stack = createNativeStackNavigator<RooStackParamList>()
-const Tab = createBottomTabNavigator<RooStackParamList>()
+// const Tab = createBottomTabNavigator<RooStackParamList>()
+const Drawer = createDrawerNavigator<RooStackParamList>()
 
 export default function App() {
   return (
     <>
       <StatusBar barStyle="dark-content" />
       <NavigationContainer>
-        <Tab.Navigator initialRouteName='Home' screenOptions={({ route }) => ({
-          tabBarIcon: ({ color, size }) => {
-            const icons: any = {
-              Home: 'home',
-              Search: 'search',
-              Profile: 'person',
-              Details: 'information-circle'
-            }
-
-            return <Ionicons name={icons[route.name]} size={size} color={color} />
-          },
-          tabBarActiveTintColor: '#6200ee',
-          tabBarInactiveTintColor: '#999'
-        })}>
-          <Tab.Screen name='Home' component={HomeScreen} options={{
+        <Drawer.Navigator initialRouteName='Home'>
+          <Drawer.Screen name='Home' component={HomeScreen} options={{
             title: 'בית',
             headerStyle: {
               backgroundColor: '#6200ee'
@@ -48,16 +37,16 @@ export default function App() {
             headerTintColor: '#fff',
             headerTitleAlign: 'left' // TODO Check  On  that
           }} />
-          <Tab.Screen name="Details" component={DetailsScreen} options={{
+          <Drawer.Screen name="Details" component={DetailsScreen} options={{
             title: 'פרטים'
           }} />
-          <Tab.Screen name="Profile" component={ProfileScreen} options={{
+          <Drawer.Screen name="Profile" component={ProfileScreen} options={{
             title: 'פרופיל'
           }} />
-          <Tab.Screen name="Search" component={SearchScreen} options={{
+          <Drawer.Screen name="Search" component={SearchScreen} options={{
             title: 'חיפוש'
           }} />
-        </Tab.Navigator>
+        </Drawer.Navigator>
       </NavigationContainer>
     </>
   );
@@ -67,3 +56,18 @@ export default function App() {
 
 
 registerRootComponent(App);
+
+
+
+
+// screenOptions={({ route }) => ({
+//   tabBarIcon: ({ color, size }) => {
+//     const icons: any = {
+//       Home: 'home',
+//       Search: 'search',
+//       Profile: 'person',
+//       Details: 'information-circle'
+//     }
+
+//     return <Ionicons name={icons[route.name]} size={size} color={color} />
+//   },
