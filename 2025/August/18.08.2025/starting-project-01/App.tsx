@@ -28,7 +28,22 @@ export default function App() {
     <>
       <StatusBar barStyle="dark-content" />
       <NavigationContainer>
-        <Drawer.Navigator initialRouteName='Home'>
+        <Drawer.Navigator initialRouteName='Home' screenOptions={({ route }) => ({
+          drawerIcon: ({ color, size }) => {
+            const icons: any = {
+              Home: 'home',
+              Search: 'search',
+              Profile: 'person',
+              Details: 'information-circle'
+            }
+
+            return <Ionicons name={icons[route.name]} size={size} color={color} />
+          },
+          headerTitleAlign: 'center',
+          drawerActiveTintColor: '#6200ee',
+          drawerInactiveTintColor: '#999',
+          drawerStyle: { width: 200 }
+        })}>
           <Drawer.Screen name='Home' component={HomeScreen} options={{
             title: 'בית',
             headerStyle: {
