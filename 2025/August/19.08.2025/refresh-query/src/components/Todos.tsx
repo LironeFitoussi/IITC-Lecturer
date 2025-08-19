@@ -1,59 +1,39 @@
-import {
-    useQuery,
-    // useMutation,
-    // useQueryClient,
-} from '@tanstack/react-query'
-import { 
-    getTodos,
-    //  postTodo 
-  } from '../services/todo.service'
-
 import { type todo } from '../types'
+import { useTodos, useAddPost } from '../hooks/useTodos';
 
 export default function Todos() {
-    // Access the client
-    // const queryClient = useQueryClient()
-  
-    // Queries
-    const { isLoading, data, isError, error } = useQuery({ 
-        queryKey: ['todos'], 
-        queryFn: getTodos 
-    })
-  
+
+    const { data, isLoading, isError } = useTodos()
+    const addPostMutation = useAddPost() // Move this to top level
+
     if (isLoading) {
         return <h1>Loading...</h1>;
-    } 
-    
+    }
+
     if (isError) {
         return <h1>An error occured</h1>;
     }
-    // Mutations
-    // const mutation = useMutation({
-    //   mutationFn: postTodo,
-    //   onSuccess: () => {
-    //     // Invalidate and refetch
-    //     queryClient.invalidateQueries({ queryKey: ['todos'] })
-    //   },
-    // })
-  
+
+    function handleAddPost() {
+        addPostMutation.mutate({ // Use the mutation from the hook
+            title: 'Do Laundry',
+            userId: 234543623
+        })
+    }
+
     return (
-      <div>
-        <ul>
-          {data?.map((todo: todo) => (
-            <li key={todo.id}>{todo.title}: <b>{todo.completed && 'Done'}</b></li>
-          ))}
-        </ul>
-          {/* <button
-          onClick={() => {
-            mutation.mutate({
-              id: Date.now(),
-              title: 'Do Laundry',
-            })
-          }}
-        > 
-          Add Todo
-        </button>
-        */}
-      </div>
+        <div>
+            <ul>
+                {data?.map((todo: todo) => (
+                    <li key={todo.id}>{todo.title}: <b>{todo.completed && 'Done'}</b></li>
+                ))}
+            </ul>
+            <button
+                onClick={handleAddPost}
+            >
+                Add Todo
+            </button>
+
+        </div>
     )
-  }
+}

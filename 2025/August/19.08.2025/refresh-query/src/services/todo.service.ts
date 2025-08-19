@@ -1,4 +1,5 @@
 import api from './api';
+import { type todoDTO } from '../types';
 
 async function getTodos () {
     try {
@@ -11,6 +12,17 @@ async function getTodos () {
     }
 }
 
+async function postTodo (payload: todoDTO) {
+    try {
+        const { data } = await api.post('/todos', payload) 
+        return data
+    } catch (error) {
+        console.error(error);
+        return error;
+    }
+}
+
 export {
-    getTodos
+    getTodos,
+    postTodo
 }
