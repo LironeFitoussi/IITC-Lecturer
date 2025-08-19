@@ -1,68 +1,77 @@
 import { useAppSelector } from '../../store/hooks';
-import { selectTransactions } from '../../store/savingsSlice';
+import { selectTransactions, selectSavingsLoading } from '../../store/savingsSliceNew';
 
 const TransactionHistory: React.FC = () => {
   const transactions = useAppSelector(selectTransactions);
+  const isLoading = useAppSelector(selectSavingsLoading);
+
+  if (isLoading) {
+    return (
+      <div className="transaction-history">
+        <h3>📊 Transaction History</h3>
+        <div className="loading">🔄 Loading transactions...</div>
+      </div>
+    );
+  }
 
   return (
-    <div>
-      <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
-        📊 Transaction History
-      </h2>
-      
+    <div className="transaction-history">
+      <div className="history-header">
+        <h3>📊 Transaction History</h3>
+        <p>Showing {transactions.length} recent transactions</p>
+      </div>
+
       {transactions.length === 0 ? (
-        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-          <div className="text-4xl mb-2">📝</div>
-          <p>No transactions yet</p>
-          <p className="text-sm">Start by making a deposit or withdrawal</p>
+        <div className="no-transactions">
+          <div className="empty-state">
+            <span className="empty-icon">💳</span>
+            <h4>No transactions yet</h4>
+            <p>Make your first deposit or withdrawal to get started!</p>
+          </div>
         </div>
       ) : (
-        <div className="space-y-3 max-h-96 overflow-y-auto">
-          {transactions.map((transaction) => (
-            <div
-              key={transaction.id}
-              className={`p-4 rounded-lg border-l-4 ${
-                transaction.type === 'deposit'
-                  ? 'bg-green-50 border-green-400 dark:bg-green-900/20 dark:border-green-500'
-                  : 'bg-red-50 border-red-400 dark:bg-red-900/20 dark:border-red-500'
-              }`}
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className={`font-semibold ${
-                      transaction.type === 'deposit'
-                        ? 'text-green-700 dark:text-green-300'
-                        : 'text-red-700 dark:text-red-300'
-                    }`}>
-                      {transaction.type === 'deposit' ? '📈 Deposit' : '📉 Withdrawal'}
-                    </span>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">
-                      {new Date(transaction.createdAt).toLocaleDateString()}
-                    </span>
-                  </div>
-                  
-                  {transaction.description && (
-                    <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">
-                      {transaction.description}
-                    </p>
-                  )}
-                  
-                  <div className="text-xs text-gray-500 dark:text-gray-400">
-                    Balance after: ${transaction.balanceAfter.toFixed(2)}
-                  </div>
+        <div className="transactions-list">
+          {transactions.map(transaction => (
+            <div key={transaction.id} className={`transaction-item ${transaction.type}`}>
+              <div className="transaction-icon">
+                {transaction.type === 'deposit' ? '💵' : '💸'}
+              </div>
+              
+              <div className="transaction-details">
+                <div className="transaction-main">
+                  <span className="transaction-type">
+                    {transaction.type === 'deposit' ? 'Deposit' : 'Withdrawal'}
+                  </span>
+                  <span className={`transaction-amount ${transaction.type}`}>
+                    {transaction.type === 'deposit' ? '+' : '-'}${transaction.amount.toFixed(2)}
+                  </span>
                 </div>
                 
-                <div className={`text-lg font-bold ${
-                  transaction.type === 'deposit'
-                    ? 'text-green-600 dark:text-green-400'
-                    : 'text-red-600 dark:text-red-400'
-                }`}>
-                  {transaction.type === 'deposit' ? '+' : '-'}${transaction.amount.toFixed(2)}
+                {transaction.description && (
+                  <div className="transaction-description">
+                    {transaction.description}
+                  </div>
+                )}
+                
+                <div className="transaction-meta">
+                  <span className="transaction-date">
+                    {new Date(transaction.createdAt).toLocaleString()}
+                  </span>
+                  <span className="balance-after">
+                    Balance: ${transaction.balanceAfter.toFixed(2)}
+                  </span>
                 </div>
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {transactions.length > 0 && (
+        <div className="history-footer">
+          <p className="transaction-note">
+            💡 All transactions are processed securely and recorded in real-time
+          </p>
         </div>
       )}
     </div>
