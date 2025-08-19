@@ -28,7 +28,7 @@ export default function App() {
     <>
       <StatusBar barStyle="dark-content" />
       <NavigationContainer>
-        <Drawer.Navigator initialRouteName='Home' screenOptions={({ route }) => ({
+        <Drawer.Navigator initialRouteName='Home' screenOptions={({ route, navigation }) => ({
           drawerIcon: ({ color, size }) => {
             const icons: any = {
               Home: 'home',
@@ -39,6 +39,18 @@ export default function App() {
 
             return <Ionicons name={icons[route.name]} size={size} color={color} />
           },
+          headerLeft: () => (
+            <Ionicons
+              name='menu'
+              size={24}
+              color='#fff'
+              style={{
+                marginLeft: 12,
+                marginRight: 12
+              }}
+              onPress={navigation.openDrawer}
+              />
+          ),
           drawerType: 'front',
           swipeEnabled: false,
           headerTitleAlign: 'center',

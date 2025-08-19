@@ -1,0 +1,164 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+/* Educational UI */
+.edu-layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.edu-nav {
+  text-align: left;
+}
+
+.select-row {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.lesson-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem 0;
+}
+
+.lesson-link {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: 1px solid #444;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  color: inherit;
+  cursor: pointer;
+}
+
+.lesson-link.active {
+  border-color: #646cff;
+  box-shadow: 0 0 0 2px rgba(100,108,255,0.25);
+}
+
+.lesson-summary {
+  font-size: 0.875rem;
+  color: #999;
+  margin: 0.25rem 0 0.75rem 0;
+}
+
+.edu-content {
+  text-align: left;
+}
+
+.row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.metric {
+  min-width: 90px;
+  text-align: center;
+}
+
+.lesson-block {
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin: 0.75rem 0;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  background: #333;
+  border: 1px solid #555;
+}
+
+.badge-success {
+  background: #19351f;
+  border-color: #2c7a3f;
+}
+
+.badge-warn {
+  background: #3a2a16;
+  border-color: #b7791f;
+}
+
+.card-edu {
+  border: 1px solid #444;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.card-edu-header {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #444;
+}
+
+.card-edu-body {
+  padding: 0.75rem 1rem;
+}
+
+.form {
+  display: grid;
+  gap: 0.75rem;
+  max-width: 320px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.note {
+  color: #61dafb;
+}
