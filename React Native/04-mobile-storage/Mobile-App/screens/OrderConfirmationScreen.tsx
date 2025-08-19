@@ -3,11 +3,13 @@ import { View, Text, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { Button } from '../components/ui/Button';
 
 export default function OrderConfirmationScreen() {
   const navigation = useNavigation();
+  const route = useRoute();
+  const { orderId } = route.params as { orderId: string };
 
   const handleContinueShopping = () => {
     navigation.navigate('Tabs', { screen: 'Restaurants' });
@@ -39,7 +41,7 @@ export default function OrderConfirmationScreen() {
           
           <View style={styles.infoRow}>
             <Ionicons name="receipt-outline" size={20} color="#8E8E93" />
-            <Text style={styles.infoText}>Order #12345</Text>
+            <Text style={styles.infoText}>Order #{orderId.slice(-6)}</Text>
           </View>
         </View>
         

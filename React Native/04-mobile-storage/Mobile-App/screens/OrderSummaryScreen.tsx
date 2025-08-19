@@ -15,6 +15,7 @@ import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { useCart } from '../contexts/CartContext';
 import { useAuth } from '../contexts/AuthContext';
+import ApiService from '../services/api';
 
 export default function OrderSummaryScreen() {
   const navigation = useNavigation();
@@ -82,22 +83,36 @@ export default function OrderSummaryScreen() {
     try {
       setLoading(true);
       
-      // Simulate order placement (since we don't have payment integration)
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Prepare order data
+      const orderData = {
+        restaurant: cart.restaurant._id,
+        items: cart.items.map(item => ({
+          menuItem: item.menuItem._id,
+          quantity: item.quantity,
+          price: item.menuItem.price,
+          specialInstructions: item.specialInstructions || ''
+        })),
+        totalAmount: total,
+        orderType,
+        deliveryAddress: orderType === 'delivery' ? deliveryAddress : undefined,
+        paymentMethod: 'cash', // Default for now
+        status: 'pending'
+      };
       
-      // Create mock order ID
-      const orderId = `order_${Date.now()}`;
+      // Create order via API
+      const order = await ApiService.createOrder(orderData);
       
       // Clear cart
       await clearCart();
       
-      // Navigate to confirmation
+      // Navigate to confirmation with real order ID
       navigation.reset({
         index: 0,
-        routes: [{ name: 'OrderConfirmation', params: { orderId } }],
+        routes: [{ name: 'OrderConfirmation', params: { orderId: order._id } }],
       });
       
     } catch (error) {
+      console.error('Order creation error:', error);
       Alert.alert('Error', 'Failed to place order. Please try again.');
     } finally {
       setLoading(false);
@@ -376,9 +391,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#1C1C1E',
     marginBottom: 24,
-  },
-  backButton: {
-    marginTop: 8,
   },
   scrollView: {
     flex: 1,

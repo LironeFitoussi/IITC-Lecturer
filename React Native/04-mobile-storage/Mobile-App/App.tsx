@@ -39,7 +39,7 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 5 * 60 * 1000, // 5 minutes
-      cacheTime: 10 * 60 * 1000, // 10 minutes
+      gcTime: 10 * 60 * 1000, // 10 minutes (renamed from cacheTime in v5)
       retry: 2,
       refetchOnWindowFocus: false,
     },
@@ -118,15 +118,17 @@ export default function App() {
   }
 
   return (
-    <AuthProvider>
-      <CartProvider>
-        <NavigationContainer theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-          <AppNavigator />
-          <StatusBar style="auto" />
-          <Toast />
-        </NavigationContainer>
-      </CartProvider>
-    </AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <CartProvider>
+          <NavigationContainer theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+            <AppNavigator />
+            <StatusBar style="auto" />
+            <Toast />
+          </NavigationContainer>
+        </CartProvider>
+      </AuthProvider>
+    </QueryClientProvider>
   );
 }
 

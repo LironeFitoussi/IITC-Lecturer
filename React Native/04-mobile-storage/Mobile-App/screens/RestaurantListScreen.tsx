@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,7 +7,6 @@ import {
   RefreshControl,
   TextInput,
   TouchableOpacity,
-  Alert,
   ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -15,9 +14,9 @@ import { useNavigation } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { RestaurantCard } from '../components/RestaurantCard';
-import { Restaurant, RestaurantQuery } from '../types';
-import ApiService from '../services/api';
+import { Restaurant } from '../types';
 import { useCart } from '../contexts/CartContext';
+import { useRestaurants } from '../hooks/useRestaurants';
 
 const CUISINES = [
   'All',
@@ -35,87 +34,44 @@ export default function RestaurantListScreen() {
   const navigation = useNavigation();
   const { getCartItemCount } = useCart();
   
-  const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCuisine, setSelectedCuisine] = useState('All');
-  const [hasMore, setHasMore] = useState(true);
-  const [page, setPage] = useState(1);
+  const [debouncedSearch, setDebouncedSearch] = useState('');
 
-
-
-  const fetchRestaurants = useCallback(async (
-    pageNum: number = 1,
-    isRefresh: boolean = false
-  ) => {
-    try {
-      if (pageNum === 1) {
-        setLoading(true);
-      }
-
-      const query: RestaurantQuery = {
-        page: pageNum,
-        limit: 10,
-        search: searchQuery || undefined,
-        cuisine: selectedCuisine !== 'All' ? selectedCuisine : undefined,
-      };
-
-      const response = await ApiService.getRestaurants(query);
-      
-      if (isRefresh || pageNum === 1) {
-        setRestaurants(response.restaurants);
-      } else {
-        setRestaurants(prev => [...prev, ...response.restaurants]);
-      }
-
-      setHasMore(response.restaurants.length === 10);
-      setPage(pageNum);
-    } catch (error) {
-      console.error('Error fetching restaurants:', error);
-      Alert.alert('Error', 'Failed to load restaurants. Please try again.');
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  }, [searchQuery, selectedCuisine]);
-
+  // Debounce search query
   useEffect(() => {
-    fetchRestaurants(1, true);
-  }, [fetchRestaurants]);
+    const timeoutId = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery]);
+
+  // Use React Query for data fetching
+  const { 
+    data, 
+    isLoading, 
+    isError, 
+    refetch, 
+    isRefetching 
+  } = useRestaurants({
+    search: debouncedSearch || undefined,
+    cuisine: selectedCuisine !== 'All' ? selectedCuisine : undefined,
+    limit: 20, // Get more results at once
+  });
+
+  const restaurants: Restaurant[] = data?.restaurants || [];
 
   const handleRefresh = () => {
-    setRefreshing(true);
-    fetchRestaurants(1, true);
-  };
-
-  const handleLoadMore = () => {
-    if (hasMore && !loading) {
-      fetchRestaurants(page + 1);
-    }
+    refetch();
   };
 
   const handleSearch = (text: string) => {
     setSearchQuery(text);
   };
 
-  // Debounce search
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      if (searchQuery !== '') {
-        fetchRestaurants(1, true);
-      }
-    }, 500);
-
-    return () => clearTimeout(timeoutId);
-  }, [searchQuery, fetchRestaurants]);
-
   const handleCuisineSelect = (cuisine: string) => {
-    if (cuisine !== selectedCuisine) {
-      setSelectedCuisine(cuisine);
-      // Show loading immediately when switching filters
-      setLoading(true);
-    }
+    setSelectedCuisine(cuisine);
   };
 
   const handleRestaurantPress = (restaurant: Restaurant) => {
@@ -172,18 +128,8 @@ export default function RestaurantListScreen() {
     </View>
   );
 
-  const renderFooter = () => {
-    if (!loading || page === 1) return null;
-    
-    return (
-      <View style={styles.loadingFooter}>
-        <ActivityIndicator size="small" color="#007AFF" />
-      </View>
-    );
-  };
-
   const renderEmpty = () => {
-    if (loading) return null;
+    if (isLoading) return null;
     
     return (
       <View style={styles.emptyContainer}>
@@ -196,7 +142,32 @@ export default function RestaurantListScreen() {
     );
   };
 
+  const renderError = () => (
+    <View style={styles.emptyContainer}>
+      <Ionicons name="alert-circle-outline" size={64} color="#FF3B30" />
+      <Text style={styles.emptyTitle}>Something went wrong</Text>
+      <Text style={styles.emptySubtitle}>
+        Unable to load restaurants. Please try again.
+      </Text>
+      <TouchableOpacity style={styles.retryButton} onPress={handleRefresh}>
+        <Text style={styles.retryButtonText}>Retry</Text>
+      </TouchableOpacity>
+    </View>
+  );
+
   const cartItemCount = getCartItemCount();
+
+  if (isError) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <StatusBar style="dark" />
+        <View style={styles.topBar}>
+          <Text style={styles.title}>Restaurants</Text>
+        </View>
+        {renderError()}
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -218,7 +189,7 @@ export default function RestaurantListScreen() {
         )}
       </View>
 
-      {loading && restaurants.length === 0 ? (
+      {isLoading && restaurants.length === 0 ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#007AFF" />
           <Text style={styles.loadingText}>Loading restaurants...</Text>
@@ -232,13 +203,10 @@ export default function RestaurantListScreen() {
           columnWrapperStyle={styles.row}
           contentContainerStyle={styles.listContent}
           ListHeaderComponent={renderHeader}
-          ListFooterComponent={renderFooter}
           ListEmptyComponent={renderEmpty}
           refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+            <RefreshControl refreshing={isRefetching} onRefresh={handleRefresh} />
           }
-          onEndReached={handleLoadMore}
-          onEndReachedThreshold={0.1}
           showsVerticalScrollIndicator={false}
         />
       )}
@@ -283,10 +251,9 @@ const styles = StyleSheet.create({
   cartBadgeText: {
     color: '#FFFFFF',
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: 'bold',
   },
   header: {
-    paddingHorizontal: 24,
     paddingVertical: 16,
   },
   searchContainer: {
@@ -294,7 +261,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#F2F2F7',
     borderRadius: 12,
-    paddingHorizontal: 16,
+    paddingHorizontal: 12,
     marginBottom: 16,
   },
   searchIcon: {
@@ -302,27 +269,27 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     flex: 1,
+    paddingVertical: 12,
     fontSize: 16,
     color: '#1C1C1E',
-    paddingVertical: 12,
   },
   cuisineList: {
-    paddingVertical: 8,
+    paddingHorizontal: 4,
   },
   cuisineChip: {
     backgroundColor: '#F2F2F7',
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
-    marginRight: 8,
+    marginHorizontal: 4,
   },
   selectedCuisineChip: {
     backgroundColor: '#007AFF',
   },
   cuisineText: {
     fontSize: 14,
-    color: '#1C1C1E',
     fontWeight: '500',
+    color: '#1C1C1E',
   },
   selectedCuisineText: {
     color: '#FFFFFF',
@@ -333,10 +300,6 @@ const styles = StyleSheet.create({
   },
   row: {
     justifyContent: 'space-between',
-  },
-  loadingFooter: {
-    paddingVertical: 20,
-    alignItems: 'center',
   },
   loadingContainer: {
     flex: 1,
@@ -366,6 +329,18 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#8E8E93',
     textAlign: 'center',
+    paddingHorizontal: 32,
+  },
+  retryButton: {
+    backgroundColor: '#007AFF',
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 8,
+    marginTop: 16,
+  },
+  retryButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
-

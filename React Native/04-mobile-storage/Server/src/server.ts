@@ -14,6 +14,7 @@ import authRoutes from './routes/auth';
 import userRoutes from './routes/users';
 import restaurantRoutes from './routes/restaurants';
 import menuRoutes from './routes/menu';
+import orderRoutes from './routes/orders';
 
 const app: Application = express();
 
@@ -63,6 +64,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/restaurants', restaurantRoutes);
 app.use('/api/menu', menuRoutes);
+app.use('/api/orders', orderRoutes);
 
 // Welcome route
 app.get('/', (req: Request, res: Response) => {
@@ -76,7 +78,8 @@ app.get('/', (req: Request, res: Response) => {
         auth: '/api/auth',
         users: '/api/users',
         restaurants: '/api/restaurants',
-        menu: '/api/menu'
+        menu: '/api/menu',
+        orders: '/api/orders'
       }
     }
   });

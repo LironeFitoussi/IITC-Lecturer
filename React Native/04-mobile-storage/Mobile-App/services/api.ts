@@ -137,7 +137,7 @@ class ApiService {
 
   async getOrders(): Promise<Order[]> {
     const response = await api.get('/orders');
-    return (response.data as any).data.orders;
+    return (response.data as any).data;
   }
 
   async getOrder(id: string): Promise<Order> {
