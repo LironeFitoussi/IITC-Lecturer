@@ -44,7 +44,6 @@ export const AuthProvider = ({children}: AuthProviderProps) => {
                 const userData = JSON.parse(storedUser)
                 setUser(userData)
             }
-
         } catch (error) {
             
         }
