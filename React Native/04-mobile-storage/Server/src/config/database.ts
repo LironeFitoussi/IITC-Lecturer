@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const connectDB = async (): Promise<void> => {
   try {
-    const mongoURI = process.env.MONGODB_URI || 'mongodb+srv://lironefit:nfrCkw6H4NBgtVLz@cluster0.cqjeagn.mongodb.net/restaurent?retryWrites=true&w=majority&appName=Cluster0';
+    const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/native-app';
     
     const conn = await mongoose.connect(mongoURI);
     
