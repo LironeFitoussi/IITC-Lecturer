@@ -10,13 +10,12 @@ const contactFormSchema = z.object({
 });
 
 type ContactFromState = {
-    success?: boolean;
-    message?: string;
-    errors?: {
-        name?: string;
-        email?: string;
-        content?: string;
-        // formErrors?: string[];
+    success: boolean;
+    message: string;
+    errors: {
+        name?: string[];
+        email?: string[];
+        content?: string[];
     }
 } | null
 
@@ -28,19 +27,24 @@ export async function submitContactForm(prevState: ContactFromState | null,formD
 
         if (!result.success) return {
             success: false,
-            errors: z.flattenError(result.error)
+            errors: result.error.flatten().fieldErrors,
+            message: "Please correct the errors below."
         }
 
         await connectToDatabase();
 
         await new Message(data).save();
-        return { success: true };
+        return { 
+            success: true,
+            message: "Your message has been sent successfully!",
+            errors: {}
+        };
+
     } catch (error) {
         return { 
             success: false, 
-            errors: { 
-                formErrors: ["An unexpected error occurred. Please try again later."] 
-            }
+            errors: {},
+            message: "An error occurred while submitting the form. Please try again later."
         };
     }
 }

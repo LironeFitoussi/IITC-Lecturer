@@ -4,7 +4,7 @@ import { useActionState } from "react"
 import { submitContactForm } from "@/actions/contact"
 import SubmitButton from "./SubmitButton"
 
-export default function ContactFrom() {
+export default function ContactFrom() {   
     const [ state, action ] = useActionState(submitContactForm, null)
     return (
         <form action={action}>
