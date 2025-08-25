@@ -1,6 +1,6 @@
 'use server'
 import { z } from "zod";
-import { connectToDatabase } from "@/lib/mongo";
+import { connectToDatabase, disconnectFromDatabase } from "@/lib/mongo";
 import Message from "@/models/Message";
 
 const contactFormSchema = z.object({
@@ -33,7 +33,13 @@ export async function submitContactForm(prevState: ContactFromState | null,formD
 
         await connectToDatabase();
 
-        await new Message(data).save();
+        await Message.create({
+            name: result.data.name,
+            email: result.data.email,
+            content: result.data.content
+        });
+
+        await disconnectFromDatabase();
         return { 
             success: true,
             message: "Your message has been sent successfully!",
