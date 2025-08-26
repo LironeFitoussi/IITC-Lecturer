@@ -1,0 +1,232 @@
+#root {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.app {
+  padding: 20px;
+}
+
+.app h1 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  background: linear-gradient(45deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.examples-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 3rem;
+  margin: 3rem 0;
+}
+
+.example {
+  background: #f8f9fa;
+  border: 2px solid #e9ecef;
+  border-radius: 15px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  min-height: 350px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.example:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+}
+
+.example h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: #495057;
+}
+
+.example p {
+  color: #6c757d;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+}
+
+/* Explanation styling */
+.explanation {
+  background: #fff3cd;
+  border-left: 4px solid #ffc107;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 4px;
+  text-align: left;
+}
+
+.explanation p {
+  margin: 0.5rem 0;
+  font-size: 0.85rem;
+  color: #856404;
+}
+
+.explanation ul {
+  margin: 0.5rem 0;
+  padding-left: 1.2rem;
+}
+
+.explanation li {
+  margin-bottom: 0.3rem;
+  font-size: 0.85rem;
+  color: #856404;
+}
+
+/* Code explanation styling */
+.code-explanation {
+  background: #e3f2fd;
+  border-left: 4px solid #2196f3;
+  padding: 1rem;
+  margin-top: 1rem;
+  border-radius: 4px;
+  text-align: left;
+}
+
+.code-explanation h4 {
+  margin: 0 0 0.5rem 0;
+  color: #1976d2;
+}
+
+.code-explanation ul {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.code-explanation li {
+  margin-bottom: 0.3rem;
+  font-size: 0.9rem;
+  color: #424242;
+}
+
+.code-explanation code {
+  background: #f5f5f5;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: 'Courier New', monospace;
+  color: #d32f2f;
+  font-size: 0.85rem;
+}
+
+/* Dark mode styling */
+@media (prefers-color-scheme: dark) {
+  .example {
+    background: #2d3748;
+    border-color: #4a5568;
+  }
+  
+  .example h2 {
+    color: #e2e8f0;
+  }
+  
+  .example p {
+    color: #a0aec0;
+  }
+  
+  .explanation {
+    background: #2d2d2d;
+    border-left-color: #ffa726;
+  }
+  
+  .explanation p,
+  .explanation li {
+    color: #ffcc02;
+  }
+  
+  .code-explanation {
+    background: #1a365d;
+    border-left-color: #3182ce;
+  }
+  
+  .code-explanation h4 {
+    color: #63b3ed;
+  }
+  
+  .code-explanation li {
+    color: #cbd5e0;
+  }
+  
+  .code-explanation code {
+    background: #2d3748;
+    color: #fc8181;
+  }
+}
+
+/* Button styling for interactive examples */
+button {
+  background: linear-gradient(45deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  margin: 4px;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+/* Dark mode button styling */
+@media (prefers-color-scheme: dark) {
+  button {
+    background: linear-gradient(45deg, #4299e1, #667eea);
+  }
+  
+  button:hover {
+    box-shadow: 0 4px 12px rgba(66, 153, 225, 0.4);
+  }
+}
+
+/* Special styling for viewport demos */
+.viewport-demo {
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2rem 0;
+}
+
+/* Smooth scrolling for better viewport experience */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .examples-container {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .app h1 {
+    font-size: 2rem;
+  }
+  
+  .example {
+    padding: 1.5rem;
+    min-height: auto;
+  }
+  
+  button {
+    padding: 10px 20px;
+    font-size: 13px;
+  }
+}

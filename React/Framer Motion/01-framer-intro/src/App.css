@@ -1,0 +1,84 @@
+#root {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.app {
+  padding: 20px;
+}
+
+.app h1 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  background: linear-gradient(45deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.examples-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.example {
+  background: #f8f9fa;
+  border: 2px solid #e9ecef;
+  border-radius: 15px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.example:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+}
+
+.example h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: #495057;
+}
+
+.example p {
+  color: #6c757d;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+/* עיצוב נוסף לגרסה כהה */
+@media (prefers-color-scheme: dark) {
+  .example {
+    background: #2d3748;
+    border-color: #4a5568;
+  }
+  
+  .example h2 {
+    color: #e2e8f0;
+  }
+  
+  .example p {
+    color: #a0aec0;
+  }
+}
+
+/* עיצוב רספונסיבי */
+@media (max-width: 768px) {
+  .examples-container {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .app h1 {
+    font-size: 2rem;
+  }
+  
+  .example {
+    padding: 1.5rem;
+  }
+}
