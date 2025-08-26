@@ -1,0 +1,10 @@
+{
+  "title": "Vite + React",
+  "count_button": "le compte est {{count}}",
+  "edit_text": "Modifiez src/App.tsx et enregistrez pour tester HMR",
+  "learn_more": "Cliquez sur les logos Vite et React pour en savoir plus",
+  "welcome": "Bienvenue dans React avec i18n !",
+  "language": "Langue",
+  "english": "Anglais",
+  "french": "Français"
+}
