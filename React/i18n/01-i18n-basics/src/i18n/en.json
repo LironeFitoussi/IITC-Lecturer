@@ -1,0 +1,10 @@
+{
+  "title": "Vite + React",
+  "count_button": "count is {{count}}",
+  "edit_text": "Edit src/App.tsx and save to test HMR",
+  "learn_more": "Click on the Vite and React logos to learn more",
+  "welcome": "Welcome to React with i18n!",
+  "language": "Language",
+  "english": "English",
+  "french": "French"
+}
