@@ -1,16 +1,14 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import Cube from './components/Cube'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
-    <>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 gap-4">
+      <Cube />
       <h1 className="text-3xl font-bold underline">
         Hello world!
       </h1>
-    </>
+    </div>
   )
 }
 
