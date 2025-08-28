@@ -17,5 +17,7 @@
   "bathroom": "Bathroom",
   "food": "Food",
   "water": "Water",
-  "friend": "Friend"
+  "friend": "Friend",
+  "apple_one": "{{count}} apple",
+  "apple_other": "{{count}} apples"
 }
