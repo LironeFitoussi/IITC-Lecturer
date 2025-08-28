@@ -1,0 +1,21 @@
+{
+  "greeting": "Hello",
+  "farewell": "Goodbye",
+  "thank_you": "Thank you",
+  "yes": "Yes",
+  "no": "No",
+  "please": "Please",
+  "welcome": "Welcome",
+  "morning": "Good morning",
+  "evening": "Good evening",
+  "night": "Good night",
+  "sorry": "Sorry",
+  "excuse_me": "Excuse me",
+  "how_are_you": "How are you?",
+  "i_am_fine": "I am fine",
+  "help": "Help",
+  "bathroom": "Bathroom",
+  "food": "Food",
+  "water": "Water",
+  "friend": "Friend"
+}

@@ -1,14 +1,15 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-
+import { useTranslation } from "react-i18next"
 
 function App() {
-  const [count, setCount] = useState(0)
-
+  const { t } = useTranslation()
   return (
     <>
       <div className='flex flex-col items-center justify-center min-h-screen gap-4'>
+        
+        <div>
+          <h1 className='text-3xl font-bold underline'>{t('greeting', { name: "David"})}</h1>
+          <p>{t('sorry')}</p>
+        </div>
         <div className=''>
           <p className=''>אני מדבר עברית</p>
           <p>Je Parle Francais</p>
