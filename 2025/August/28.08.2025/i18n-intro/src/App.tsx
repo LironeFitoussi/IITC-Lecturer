@@ -5,7 +5,7 @@ function App() {
   return (
     <>
       <div className='flex flex-col items-center justify-center min-h-screen gap-4'>
-        
+        <p>{t('baba')}</p>
         <div>
           <h1 className='text-3xl font-bold underline'>{t('greeting', { name: "David"})}</h1>
           <p>{t('sorry')}</p>
