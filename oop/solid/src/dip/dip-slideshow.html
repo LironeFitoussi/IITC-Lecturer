@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dependency Inversion Principle (DIP) - Educational Slideshow</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .slideshow-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide {
+            display: none;
+            width: 90%;
+            max-width: 1200px;
+            padding: 60px;
+            text-align: center;
+            animation: slideIn 0.5s ease-in-out;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        h2 {
+            font-size: 2.8rem;
+            margin-bottom: 25px;
+            color: #ffd700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        h3 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: #87ceeb;
+        }
+
+        p, li {
+            font-size: 1.4rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        ul {
+            text-align: left;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        li {
+            margin-bottom: 10px;
+            padding-left: 10px;
+        }
+
+        .code-block {
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            overflow-x: auto;
+            border-left: 4px solid #ffd700;
+        }
+
+        .highlight {
+            background: rgba(255,215,0,0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .bad-example {
+            border-left-color: #ff6b6b;
+        }
+
+        .good-example {
+            border-left-color: #51cf66;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            padding: 12px 24px;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .slide-counter {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(0,0,0,0.3);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 1.1rem;
+        }
+
+        .icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 20px 0;
+        }
+
+        .comparison-item {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .comparison-item h4 {
+            font-size: 1.6rem;
+            margin-bottom: 15px;
+        }
+
+        .bad {
+            border-left: 4px solid #ff6b6b;
+        }
+
+        .good {
+            border-left: 4px solid #51cf66;
+        }
+
+        .principle-box {
+            background: rgba(255,215,0,0.1);
+            border: 2px solid #ffd700;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .benefit-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .benefit-item {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .benefit-item .icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 30px 20px;
+            }
+            
+            h1 { font-size: 2.5rem; }
+            h2 { font-size: 2rem; }
+            h3 { font-size: 1.8rem; }
+            p, li { font-size: 1.2rem; }
+            
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+            
+            .code-block {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="slideshow-container">
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <div class="icon">🔄</div>
+            <h1>Dependency Inversion Principle</h1>
+            <h3>SOLID Principles - Part 5</h3>
+            <p>Understanding the "D" in SOLID</p>
+            <p style="margin-top: 40px; font-size: 1.2rem; opacity: 0.8;">
+                High-level modules should not depend on low-level modules.<br>
+                Both should depend on abstractions.
+            </p>
+        </div>
+
+        <!-- Slide 2: What is DIP? -->
+        <div class="slide">
+            <h2>What is the Dependency Inversion Principle?</h2>
+            <div class="principle-box">
+                <p><strong>Definition:</strong> High-level modules should not depend on low-level modules. Both should depend on abstractions.</p>
+            </div>
+            <ul>
+                <li><strong>High-level modules:</strong> Business logic, policies, complex algorithms</li>
+                <li><strong>Low-level modules:</strong> Utility functions, data access, external services</li>
+                <li><strong>Abstractions:</strong> Interfaces, abstract classes</li>
+            </ul>
+        </div>
+
+        <!-- Slide 3: The Two Parts of DIP -->
+        <div class="slide">
+            <h2>The Two Parts of DIP</h2>
+            <div class="comparison">
+                <div class="comparison-item">
+                    <h4>📈 Part 1</h4>
+                    <p>High-level modules should not depend on low-level modules. Both should depend on abstractions.</p>
+                </div>
+                <div class="comparison-item">
+                    <h4>🎯 Part 2</h4>
+                    <p>Abstractions should not depend on details. Details should depend on abstractions.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Why DIP Matters -->
+        <div class="slide">
+            <h2>Why Does DIP Matter?</h2>
+            <div class="benefit-grid">
+                <div class="benefit-item">
+                    <div class="icon">🔧</div>
+                    <h4>Flexibility</h4>
+                    <p>Easy to swap implementations</p>
+                </div>
+                <div class="benefit-item">
+                    <div class="icon">🧪</div>
+                    <h4>Testability</h4>
+                    <p>Simple to mock dependencies</p>
+                </div>
+                <div class="benefit-item">
+                    <div class="icon">🏗️</div>
+                    <h4>Maintainability</h4>
+                    <p>Loose coupling between modules</p>
+                </div>
+                <div class="benefit-item">
+                    <div class="icon">📈</div>
+                    <h4>Scalability</h4>
+                    <p>Easy to extend functionality</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Traditional Approach (Problem) -->
+        <div class="slide">
+            <h2>The Traditional Approach</h2>
+            <div class="icon">❌</div>
+            <p>Let's see what happens when we <strong>violate</strong> the DIP...</p>
+            <div class="code-block bad-example">
+// High-level module depends directly on low-level modules
+class PaymentService {
+    private stripeProcessor = new StripePaymentProcessor();
+    private paypalProcessor = new PaypalPaymentProcessor();
+    
+    makePayment(amount: number, type: string) {
+        if (type === "stripe") {
+            this.stripeProcessor.process(amount);
+        } else if (type === "paypal") {
+            this.paypalProcessor.process(amount);
+        }
+    }
+}
+            </div>
+        </div>
+
+        <!-- Slide 6: Problems with Traditional Approach -->
+        <div class="slide">
+            <h2>Problems with This Approach</h2>
+            <ul>
+                <li>🔒 <strong>Tight Coupling:</strong> PaymentService is tightly bound to specific processors</li>
+                <li>🧪 <strong>Hard to Test:</strong> Cannot easily mock payment processors</li>
+                <li>📦 <strong>Difficult to Extend:</strong> Adding new processors requires modifying PaymentService</li>
+                <li>🔄 <strong>Violates Open/Closed:</strong> Must modify existing code for new features</li>
+                <li>⚡ <strong>Runtime Dependencies:</strong> All processors must be available at compile time</li>
+            </ul>
+        </div>
+
+        <!-- Slide 7: The DIP Solution -->
+        <div class="slide">
+            <h2>The DIP Solution</h2>
+            <div class="icon">✅</div>
+            <p>Let's apply the Dependency Inversion Principle...</p>
+            <div class="code-block good-example">
+// Step 1: Create an abstraction
+interface PaymentProcessor {
+    processPayment(amount: number): void;
+}
+
+// Step 2: High-level module depends on abstraction
+class PaymentService {
+    constructor(private processor: PaymentProcessor) {}
+    
+    makePayment(amount: number): void {
+        this.processor.processPayment(amount);
+    }
+}
+            </div>
+        </div>
+
+        <!-- Slide 8: Implementing the Abstraction -->
+        <div class="slide">
+            <h2>Implementing the Abstraction</h2>
+            <p>Low-level modules now depend on the abstraction:</p>
+            <div class="code-block good-example">
+class StripePaymentProcessor implements PaymentProcessor {
+    processPayment(amount: number): void {
+        console.log(`Processed $${amount} using Stripe.`);
+    }
+}
+
+class PayPalPaymentProcessor implements PaymentProcessor {
+    processPayment(amount: number): void {
+        console.log(`Processed $${amount} using PayPal.`);
+    }
+}
+
+class ApplePayPaymentProcessor implements PaymentProcessor {
+    processPayment(amount: number): void {
+        console.log(`Processed $${amount} using ApplePay.`);
+    }
+}
+            </div>
+        </div>
+
+        <!-- Slide 9: Using the DIP Solution -->
+        <div class="slide">
+            <h2>Using the DIP Solution</h2>
+            <div class="code-block good-example">
+// Create specific implementations
+const stripeService = new PaymentService(
+    new StripePaymentProcessor()
+);
+
+const paypalService = new PaymentService(
+    new PayPalPaymentProcessor()
+);
+
+const applePayService = new PaymentService(
+    new ApplePayPaymentProcessor()
+);
+
+// Use them
+stripeService.makePayment(100);
+paypalService.makePayment(200);
+applePayService.makePayment(300);
+            </div>
+        </div>
+
+        <!-- Slide 10: Dynamic Usage -->
+        <div class="slide">
+            <h2>Dynamic Usage</h2>
+            <p>The real power comes from dynamic processor selection:</p>
+            <div class="code-block good-example">
+// Array of different processors
+const processors: PaymentProcessor[] = [
+    new StripePaymentProcessor(),
+    new PayPalPaymentProcessor(),
+    new ApplePayPaymentProcessor()
+];
+
+// Process payments with each processor
+processors.forEach(processor => {
+    const service = new PaymentService(processor);
+    service.makePayment(100);
+});
+
+// Output:
+// "Processed $100 using Stripe."
+// "Processed $100 using PayPal."
+// "Processed $100 using ApplePay."
+            </div>
+        </div>
+
+        <!-- Slide 11: Before vs After Comparison -->
+        <div class="slide">
+            <h2>Before vs After</h2>
+            <div class="comparison">
+                <div class="comparison-item bad">
+                    <h4>❌ Before (DIP Violation)</h4>
+                    <ul style="font-size: 1.1rem;">
+                        <li>Direct dependencies</li>
+                        <li>Hard to test</li>
+                        <li>Difficult to extend</li>
+                        <li>Tight coupling</li>
+                        <li>Violates OCP</li>
+                    </ul>
+                </div>
+                <div class="comparison-item good">
+                    <h4>✅ After (DIP Applied)</h4>
+                    <ul style="font-size: 1.1rem;">
+                        <li>Depends on abstractions</li>
+                        <li>Easy to test with mocks</li>
+                        <li>Simple to add new processors</li>
+                        <li>Loose coupling</li>
+                        <li>Follows OCP</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Dependency Injection -->
+        <div class="slide">
+            <h2>Dependency Injection</h2>
+            <p>DIP often works hand-in-hand with <span class="highlight">Dependency Injection</span></p>
+            <div class="code-block">
+// Constructor Injection (most common)
+class PaymentService {
+    constructor(private processor: PaymentProcessor) {}
+}
+
+// Method Injection
+class PaymentService {
+    makePayment(amount: number, processor: PaymentProcessor) {
+        processor.processPayment(amount);
+    }
+}
+
+// Property Injection
+class PaymentService {
+    processor: PaymentProcessor;
+    
+    setProcessor(processor: PaymentProcessor) {
+        this.processor = processor;
+    }
+}
+            </div>
+        </div>
+
+        <!-- Slide 13: Testing Benefits -->
+        <div class="slide">
+            <h2>Testing Benefits</h2>
+            <p>DIP makes unit testing much easier:</p>
+            <div class="code-block good-example">
+// Mock implementation for testing
+class MockPaymentProcessor implements PaymentProcessor {
+    public processedAmount: number = 0;
+    
+    processPayment(amount: number): void {
+        this.processedAmount = amount;
+    }
+}
+
+// Test
+const mockProcessor = new MockPaymentProcessor();
+const service = new PaymentService(mockProcessor);
+
+service.makePayment(150);
+
+console.log(mockProcessor.processedAmount); // 150
+// Test passes - we can verify behavior without external dependencies
+            </div>
+        </div>
+
+        <!-- Slide 14: Real-World Example - Database Access -->
+        <div class="slide">
+            <h2>Real-World Example: Database Access</h2>
+            <div class="code-block good-example">
+// Abstraction
+interface UserRepository {
+    save(user: User): Promise&lt;void&gt;;
+    findById(id: string): Promise&lt;User | null&gt;;
+}
+
+// High-level module
+class UserService {
+    constructor(private userRepo: UserRepository) {}
+    
+    async createUser(userData: any): Promise&lt;User&gt; {
+        const user = new User(userData);
+        await this.userRepo.save(user);
+        return user;
+    }
+}
+
+// Low-level implementations
+class MongoUserRepository implements UserRepository { ... }
+class PostgreSQLUserRepository implements UserRepository { ... }
+class InMemoryUserRepository implements UserRepository { ... }
+            </div>
+        </div>
+
+        <!-- Slide 15: Real-World Example - Logging -->
+        <div class="slide">
+            <h2>Real-World Example: Logging</h2>
+            <div class="code-block good-example">
+// Abstraction
+interface Logger {
+    log(message: string): void;
+    error(message: string): void;
+}
+
+// High-level module
+class OrderService {
+    constructor(private logger: Logger) {}
+    
+    processOrder(order: Order): void {
+        this.logger.log(`Processing order ${order.id}`);
+        // ... business logic ...
+        this.logger.log(`Order ${order.id} processed successfully`);
+    }
+}
+
+// Low-level implementations
+class ConsoleLogger implements Logger { ... }
+class FileLogger implements Logger { ... }
+class CloudLogger implements Logger { ... }
+            </div>
+        </div>
+
+        <!-- Slide 16: Common Mistakes -->
+        <div class="slide">
+            <h2>Common Mistakes to Avoid</h2>
+            <ul>
+                <li>🚫 <strong>Creating interfaces after implementations:</strong> Design abstractions first</li>
+                <li>🚫 <strong>One-to-one interfaces:</strong> Don't create interfaces that only have one implementation</li>
+                <li>🚫 <strong>Leaky abstractions:</strong> Don't expose implementation details in interfaces</li>
+                <li>🚫 <strong>Over-abstracting:</strong> Not everything needs an interface</li>
+                <li>🚫 <strong>Ignoring the Liskov Substitution Principle:</strong> Implementations must be truly substitutable</li>
+            </ul>
+        </div>
+
+        <!-- Slide 17: When to Apply DIP -->
+        <div class="slide">
+            <h2>When to Apply DIP?</h2>
+            <div class="benefit-grid">
+                <div class="benefit-item good">
+                    <div class="icon">✅</div>
+                    <h4>Apply When</h4>
+                    <ul style="text-align: left; font-size: 1rem;">
+                        <li>Multiple implementations exist</li>
+                        <li>External dependencies</li>
+                        <li>Testing is important</li>
+                        <li>Future extensibility needed</li>
+                    </ul>
+                </div>
+                <div class="benefit-item bad">
+                    <div class="icon">❌</div>
+                    <h4>Don't Apply When</h4>
+                    <ul style="text-align: left; font-size: 1rem;">
+                        <li>Simple, stable dependencies</li>
+                        <li>Language built-in features</li>
+                        <li>Over-engineering risk</li>
+                        <li>Single, unlikely-to-change impl</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 18: DIP and Other SOLID Principles -->
+        <div class="slide">
+            <h2>DIP and Other SOLID Principles</h2>
+            <ul>
+                <li>🔗 <strong>SRP:</strong> Abstractions have single responsibility</li>
+                <li>🔗 <strong>OCP:</strong> Open for extension via new implementations</li>
+                <li>🔗 <strong>LSP:</strong> Implementations must be substitutable</li>
+                <li>🔗 <strong>ISP:</strong> Keep interfaces focused and minimal</li>
+            </ul>
+            <div class="principle-box">
+                <p><strong>Remember:</strong> SOLID principles work together to create maintainable, flexible code!</p>
+            </div>
+        </div>
+
+        <!-- Slide 19: Key Takeaways -->
+        <div class="slide">
+            <h2>Key Takeaways</h2>
+            <div class="benefit-grid">
+                <div class="benefit-item">
+                    <div class="icon">🎯</div>
+                    <h4>Depend on Abstractions</h4>
+                    <p>Not concrete implementations</p>
+                </div>
+                <div class="benefit-item">
+                    <div class="icon">🔄</div>
+                    <h4>Invert Dependencies</h4>
+                    <p>High-level modules shouldn't depend on low-level ones</p>
+                </div>
+                <div class="benefit-item">
+                    <div class="icon">🧪</div>
+                    <h4>Enable Testing</h4>
+                    <p>Mock dependencies easily</p>
+                </div>
+                <div class="benefit-item">
+                    <div class="icon">📈</div>
+                    <h4>Improve Flexibility</h4>
+                    <p>Easy to extend and modify</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 20: Thank You -->
+        <div class="slide">
+            <div class="icon">🎉</div>
+            <h1>Thank You!</h1>
+            <h3>Questions?</h3>
+            <div class="principle-box">
+                <p><strong>Remember the DIP:</strong></p>
+                <p>High-level modules should not depend on low-level modules.<br>
+                Both should depend on abstractions.</p>
+            </div>
+            <p style="margin-top: 40px; opacity: 0.8;">
+                Practice implementing DIP in your next project!
+            </p>
+        </div>
+    </div>
+
+    <div class="slide-counter">
+        <span id="current-slide">1</span> / <span id="total-slides">20</span>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" id="prev-btn" onclick="changeSlide(-1)">← Previous</button>
+        <button class="nav-btn" id="next-btn" onclick="changeSlide(1)">Next →</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        
+        document.getElementById('total-slides').textContent = totalSlides;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            
+            document.getElementById('current-slide').textContent = currentSlide + 1;
+            
+            // Update navigation buttons
+            document.getElementById('prev-btn').disabled = currentSlide === 0;
+            document.getElementById('next-btn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function changeSlide(n) {
+            if ((currentSlide + n >= 0) && (currentSlide + n < totalSlides)) {
+                showSlide(currentSlide + n);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+            if (e.key === 'Home') showSlide(0);
+            if (e.key === 'End') showSlide(totalSlides - 1);
+        });
+
+        // Initialize
+        showSlide(0);
+    </script>
+</body>
+</html>
+
