@@ -1,12 +1,31 @@
+import { Trans } from "react-i18next"
 import { useTranslation } from "react-i18next"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import SwitchLngBtn from "./components/SwitchLngBtn"
 
 function App() {
   const [count, setCount] = useState(0)
+  const { i18n } = useTranslation();
+
+  function findUserLanguage(): string {
+    const lang = navigator.language;
+    if (lang.startsWith('he')) return 'he';
+    if (lang.startsWith('fr')) return 'fr';
+    if (lang.startsWith('ru')) return 'ru';
+    return 'en';
+  }
 
 
+  useEffect(() => {
+    // const s = localStorage.getItem('lng');
+    // if (s) i18n.changeLanguage(s);
+
+    const userLang = findUserLanguage();
+    i18n.changeLanguage(userLang);
+  }, []);
+  
   const { t } = useTranslation()
+
   return (
     <>
       <SwitchLngBtn />
@@ -20,8 +39,8 @@ function App() {
           >
             +
           </button>
-          <span> 
-            { t('apple', { count })}
+          <span>
+            {t('apple', { count })}
           </span>
           <button
             className="px-3 py-1 bg-red-500 text-white rounded"
@@ -30,8 +49,17 @@ function App() {
             -
           </button>
         </div>
+        <p>
+        <Trans 
+        i18nKey={'link'} 
+        values={{ 
+          here : 'https://react.i18next.com/' 
+        }}>
+            Click <a className="font-bold underline" href="https://react.i18next.com/">here</a> to learn more.
+        </Trans>
+        </p>
         <div>
-          <h1 className='text-3xl font-bold underline'>{t('greeting', { name: "David"})}</h1>
+          <h1 className='text-3xl font-bold underline'>{t('greeting', { name: "David" })}</h1>
           <p>{t('sorry')}</p>
         </div>
         <div className=''>

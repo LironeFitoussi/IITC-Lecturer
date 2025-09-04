@@ -17,5 +17,8 @@
   "bathroom": "Toilettes",
   "food": "Nourriture",
   "water": "Eau",
-  "friend": "Ami"
+  "friend": "Ami",
+  "apple_one": "{{count}} pomme",
+  "apple_other": "{{count}} pommes",
+  "link": "Cliquez <1> ici </1> pour en savoir plus."
 }

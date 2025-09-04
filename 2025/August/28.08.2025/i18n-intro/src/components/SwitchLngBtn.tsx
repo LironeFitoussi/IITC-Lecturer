@@ -5,6 +5,7 @@ export default function SwitchLngBtn() {
 
     const changeLanguage = (lng: string) => {
         i18n.changeLanguage(lng);
+        localStorage.setItem('lng', lng);
     }
 
     return (

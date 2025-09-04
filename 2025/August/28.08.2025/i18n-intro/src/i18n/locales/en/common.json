@@ -19,5 +19,6 @@
   "water": "Water",
   "friend": "Friend",
   "apple_one": "{{count}} apple",
-  "apple_other": "{{count}} apples"
+  "apple_other": "{{count}} apples",
+  "link": "Click <1> here </1> to learn more."
 }
