@@ -2,7 +2,7 @@
 
 // class Store<T> {
 //     private _items: T[] = [];
-    
+
 //     add(item: T) {
 //         this._items.push(item)
 //     }
@@ -56,10 +56,10 @@
 // console.log(Utils.allPass<number>([1,2,3], n => n > 0));
 // console.log(Utils.allPass<string>(['a', 'b', 'c'], s => s.length >= 1));
 
-// interface User {
-//     name: string,
-//     age: number
-// }
+interface User {
+    name: string,
+    age: number
+}
 
 // const users: User[] = [
 //     { name: "Alice", age: 28 },
@@ -71,3 +71,49 @@
 // console.log(Utils.allPass<User>(users, u => u.age >= 18));
 
 // -----------------------------
+
+// (Array.prototype as any).getFirstIndex = function () {
+//     console.log(this[1]);   
+// }
+
+// const arr1 = [5, 8, 20]
+
+// arr1.getFirstIndex()
+
+// =================================
+type Callback<T> = (item: T, index: number, arr: T[]) => unknown;
+declare global {
+    interface Array<T> {
+        myEvery(cb: Callback<T>): boolean;
+    }
+}
+
+(Array.prototype as any).myEvery = function <T>(
+    this: T[],
+    cb: Callback<T>
+): boolean {
+    // Base Validation for CB
+    if (typeof cb !== 'function') {
+        throw new TypeError('callbakc must be a valid funciton')
+    }
+
+    for (let i = 0; i < this.length; i++) {
+        const result = cb(this[i], i, this)
+        if (!result) {
+            return !!result
+        }
+    }
+    return true
+}
+
+const arr2 = [1, -3, 5]
+console.log(arr2.myEvery((x) => x > 0));
+
+const users: User[] = [
+    { name: "Alice", age: 28 },
+    { name: "Bob", age: 34 },
+    { name: "Charlie", age: 17 },
+    { name: "Diana", age: 30 }
+]
+
+console.log(users.every((x) => x.age > 18));
