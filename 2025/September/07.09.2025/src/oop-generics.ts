@@ -44,29 +44,30 @@
 
 
 // ---------------------------
-class Utils {
-    static allPass<T>(arr: T[], cb: (item: T) => boolean): boolean{
-        for ( let el of arr) {
-            if (!cb(el)) return false
-        }
-        return true
-    }
-}
+// class Utils {
+//     static allPass<T>(arr: T[], cb: (item: T) => boolean): boolean{
+//         for ( let el of arr) {
+//             if (!cb(el)) return false
+//         }
+//         return true
+//     }
+// }
 
-console.log(Utils.allPass<number>([1,2,3], n => n > 0));
-console.log(Utils.allPass<string>(['a', 'b', 'c'], s => s.length >= 1));
+// console.log(Utils.allPass<number>([1,2,3], n => n > 0));
+// console.log(Utils.allPass<string>(['a', 'b', 'c'], s => s.length >= 1));
 
-interface User {
-    name: string,
-    age: number
-}
+// interface User {
+//     name: string,
+//     age: number
+// }
 
-const users: User[] = [
-    { name: "Alice", age: 28 },
-    { name: "Bob", age: 34 },
-    { name: "Charlie", age: 17 },
-    { name: "Diana", age: 30 }
-]
+// const users: User[] = [
+//     { name: "Alice", age: 28 },
+//     { name: "Bob", age: 34 },
+//     { name: "Charlie", age: 17 },
+//     { name: "Diana", age: 30 }
+// ]
 
-console.log(Utils.allPass<User>(users, u => u.age >= 18));
+// console.log(Utils.allPass<User>(users, u => u.age >= 18));
 
+// -----------------------------
