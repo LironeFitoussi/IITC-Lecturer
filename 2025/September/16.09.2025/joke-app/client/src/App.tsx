@@ -1,12 +1,10 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
 import useGetJokes from "./hooks/useGetJokes";
-import { getAllJokes } from "./services/jokes.service";
+import { type Joke } from "./types";
+// Components Imports
+import NewJokeForm from "./components/NewJokeForm";
 
 function App() {
-  const [count, setCount] = useState(0);
   const { data, isLoading, isError } = useGetJokes();
   // console.log();
   if (isLoading) {
@@ -19,14 +17,16 @@ function App() {
   return (
     <>
       <div>
-        {data.data.map((j: any) => {
+        {data.data.map((j: Joke) => {
           return (
-            <p>
+            <p key={j._id}>
               {j.content} {j.punchline}
             </p>
           );
         })}
       </div>
+      <br />
+      <NewJokeForm />
     </>
   );
 }
