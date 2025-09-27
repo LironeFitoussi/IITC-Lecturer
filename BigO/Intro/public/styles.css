@@ -1,0 +1,22 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #b2f7ef 0%, #7fffd4 50%, #43e97b 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.welcome {
+  font-size: 2.2rem;
+  color: #155724;
+  background: rgba(255,255,255,0.7);
+  padding: 24px 48px;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(67,233,123,0.12);
+  font-weight: bold;
+  text-align: center;
+  letter-spacing: 1px;
+}
