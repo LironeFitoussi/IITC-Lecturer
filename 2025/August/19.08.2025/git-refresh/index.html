@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Blog - Thoughts & Ideas</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-brand">
+                <h1>MyBlog</h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link active">Home</a></li>
+                <li><a href="#blog" class="nav-link">Blog</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="hero" class="hero">
+            <div class="container">
+                <h2 class="hero-title">Welcome to My Blog</h2>
+                <p class="hero-subtitle">Exploring ideas, sharing thoughts, and connecting through words</p>
+                <button class="cta-button">Start Reading</button>
+            </div>
+        </section>
+
+        <section id="featured-posts" class="featured-posts">
+            <div class="container">
+                <h3 class="section-title">Featured Posts</h3>
+                <div class="posts-grid">
+                    <article class="post-card featured">
+                        <div class="post-image">
+                            <img src="https://picsum.photos/400/250?random=1" alt="Post image">
+                        </div>
+                        <div class="post-content">
+                            <div class="post-meta">
+                                <span class="post-category">Technology</span>
+                                <span class="post-date">August 19, 2025</span>
+                            </div>
+                            <h4 class="post-title">The Future of Web Development</h4>
+                            <p class="post-excerpt">Exploring the latest trends and technologies that are shaping the future of web development...</p>
+                            <a href="#" class="read-more">Read More →</a>
+                        </div>
+                    </article>
+
+                    <article class="post-card">
+                        <div class="post-image">
+                            <img src="https://picsum.photos/400/250?random=2" alt="Post image">
+                        </div>
+                        <div class="post-content">
+                            <div class="post-meta">
+                                <span class="post-category">Design</span>
+                                <span class="post-date">August 18, 2025</span>
+                            </div>
+                            <h4 class="post-title">UI/UX Design Principles</h4>
+                            <p class="post-excerpt">Essential principles every designer should know for creating user-friendly interfaces...</p>
+                            <a href="#" class="read-more">Read More →</a>
+                        </div>
+                    </article>
+
+                    <article class="post-card">
+                        <div class="post-image">
+                            <img src="https://picsum.photos/400/250?random=3" alt="Post image">
+                        </div>
+                        <div class="post-content">
+                            <div class="post-meta">
+                                <span class="post-category">Programming</span>
+                                <span class="post-date">August 17, 2025</span>
+                            </div>
+                            <h4 class="post-title">JavaScript Best Practices</h4>
+                            <p class="post-excerpt">Writing clean, maintainable JavaScript code that scales with your project...</p>
+                            <a href="#" class="read-more">Read More →</a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="newsletter" class="newsletter">
+            <div class="container">
+                <div class="newsletter-content">
+                    <h3>Subscribe to My Newsletter</h3>
+                    <p>Get the latest posts and updates delivered to your inbox</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Enter your email" required>
+                        <button type="submit">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>MyBlog</h4>
+                    <p>Sharing thoughts, ideas, and experiences through writing.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#blog">Blog</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Connect</h4>
+                    <div class="social-links">
+                        <a href="#" class="social-link">Twitter</a>
+                        <a href="#" class="social-link">LinkedIn</a>
+                        <a href="#" class="social-link">GitHub</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 MyBlog. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

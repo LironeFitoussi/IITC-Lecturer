@@ -1,0 +1,109 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* Warm Cookie Colors */
+  --primary-brown: #8B4513;
+  --warm-cream: #FDF5E6;
+  --golden-yellow: #FFD700;
+  --chocolate-brown: #3E2723;
+  --caramel: #CD853F;
+  --light-brown: #DEB887;
+  --white: #FFFFFF;
+  --soft-shadow: rgba(139, 69, 19, 0.1);
+  --warm-shadow: rgba(205, 133, 63, 0.2);
+  
+  font-family: 'Poppins', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  font-weight: 400;
+  
+  color: var(--chocolate-brown);
+  background: linear-gradient(135deg, var(--warm-cream) 0%, #FFF8DC 100%);
+  
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  direction: rtl;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+a {
+  font-weight: 500;
+  color: var(--primary-brown);
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+a:hover {
+  color: var(--caramel);
+  transform: translateY(-1px);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--chocolate-brown);
+  font-weight: 600;
+}
+
+button {
+  border-radius: 25px;
+  border: none;
+  padding: 12px 24px;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background: linear-gradient(45deg, var(--primary-brown), var(--caramel));
+  color: var(--white);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px var(--soft-shadow);
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px var(--warm-shadow);
+  background: linear-gradient(45deg, var(--caramel), var(--primary-brown));
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--warm-cream);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--caramel);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-brown);
+}

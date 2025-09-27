@@ -1,0 +1,17 @@
+{
+  "title": "Advanced i18n with Trans Component",
+  "language": "Language",
+  "english": "English",
+  "french": "French",
+  "welcome_with_link": "Welcome to <1>React with i18n</1>! This is an <3>advanced example</3>.",
+  "user_greeting": "Hello <1>{{username}}</1>, you have <3>{{count}}</3> new messages!",
+  "terms_and_conditions": "By clicking continue, you agree to our <1>Terms of Service</1> and <3>Privacy Policy</3>.",
+  "documentation_link": "Read the <1>official documentation</1> to learn more about i18n.",
+  "complex_example": "This is a <1>bold text</1> with a <3>custom link</3> and some <5>{{dynamicValue}}</5>.",
+  "nested_components": "You can nest <1>multiple <3>components</3> inside</1> each other.",
+  "count_with_plurals": "You have {{count}} item",
+  "count_with_plurals_plural": "You have {{count}} items",
+  "email_verification": "Please check your email <1>{{email}}</1> and click the <3>verification link</3>.",
+  "shopping_cart": "Your cart contains <1>{{itemCount}}</1> items totaling <3>${{total}}</3>. <5>Checkout now</5>!",
+  "error_message": "An error occurred: <1>{{errorMessage}}</1>. Please <3>try again</3> or <5>contact support</5>."
+}
