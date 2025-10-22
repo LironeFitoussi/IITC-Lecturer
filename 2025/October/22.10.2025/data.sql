@@ -11,3 +11,15 @@ DROP TABLE cats;
 
 INSERT INTO cats(name, age)
 VALUES ('Jetson', 7);
+
+INSERT INTO cats(age, name)
+VALUES (12, 'Victoria');
+
+SELECT * FROM cats;
+
+-- Insert Multiple Values
+INSERT INTO cats(age, name)
+VALUES ('Charlie', 10),
+    ('Sadie'),
+    ('Lazy Bear', 1)
+;
