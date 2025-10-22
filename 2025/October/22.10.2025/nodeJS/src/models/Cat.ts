@@ -19,7 +19,7 @@ export default class Cat {
 
   static async findAll() {
     const { rows } = await pool.query("SELECT * FROM cats");
-    return rows; // or rows.map(r => new Cat(r)) if you want instances
+    return rows; 
   }
 
   async save() {
@@ -28,6 +28,13 @@ export default class Cat {
       [this.name, this.age, this.breed]
     );
     const row = rows[0];
-    return row;       // return the single created record
+    return row;
+  }
+
+  static async deleteOne(id: string) {
+    await pool.query(`
+      DELETE FROM cats
+      WHERE id=($1)
+    `, [id])
   }
 }

@@ -1,2 +1,19 @@
 ALTER TABLE cats
 ADD COLUMN breed VARCHAR(50);
+
+
+-- Add New ID Column:
+ALTER TABLE cats
+ADD COLUMN id SERIAL PRIMARY KEY
+
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+
+
+ALTER TABLE cats
+DROP COLUMN id,
+ADD COLUMN id UUID DEFAULT uuid_generate_v4();
+
+
+-- DELETE ROW BUY ID
