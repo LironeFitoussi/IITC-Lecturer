@@ -1,0 +1,2 @@
+ALTER TABLE cats
+ADD COLUMN breed VARCHAR(50);

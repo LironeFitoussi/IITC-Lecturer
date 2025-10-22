@@ -1,10 +1,8 @@
 import { Router } from "express";
-import Cat from "../models/Cat.js";
+import { getAllCats, saveNewCat } from '../controllers/catController.js'
 
 const router = Router()
-router.get('/', async (req, res) => {
-    const allCats = await Cat.findAll()
-    res.json({
-        data: allCats
-    }) 
-})
+
+router.get('/', getAllCats)
+router.post('/', saveNewCat)
+export default router
